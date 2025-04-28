@@ -10,8 +10,8 @@ interface CartItem extends Partial<TCartItem> {
 interface CartContextType {
   cartItems: CartItem[];
   addToCart: (item: CartItem) => void;
-  updateItemQuantity: (itemId: number, quantity: number) => void; // update item quantity
-  removeFromCart: (itemId: number) => void;
+  updateItemQuantity: (itemId: string, quantity: number) => void; // update item quantity
+  removeFromCart: (itemId: string) => void;
   clearCart: () => void;
   cartCount: number;
 }
@@ -64,14 +64,14 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const updateItemQuantity = (itemId: number, quantity: number) => {
+  const updateItemQuantity = (itemId: string, quantity: number) => {
     const updatedCart = cartItems.map((item) =>
       item.id === itemId ? { ...item, quantity } : item
     );
     setCartItems(updatedCart);
   };
 
-  const removeFromCart = (itemId: number) => {
+  const removeFromCart = (itemId: string) => {
     setCartItems(prevItems => prevItems.filter(item => item.id !== itemId));
   };
 

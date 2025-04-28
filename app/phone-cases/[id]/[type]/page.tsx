@@ -3,45 +3,35 @@ import { useParams, useRouter } from "next/navigation";
 import CaseCard3 from "@/app/components/cart3";
 import { useCart } from "@/app/context/CartContext";
 import { TCartItem } from "@/app/types/case.interface";
+import { useFindAllCaseQuery } from "@/app/redux/services/case.service";
 
 // Dummy JSON data
-const caseCategories: TCartItem[] = [
-  {
-    id: 201,
-    name: "3D CASE",
-    image: "/Component 6.png",
-    price: 25.0,
-    discountPrice: 20.0,
-    stock: 10,
-    slug: "3d-case",
-    type: "phone-case",
-  },
-  {
-    id: 202,
-    name: "3D CASE",
-    image: "/Component 7.png",
-    price: 35.0,
-    discountPrice: 30.0,
-    stock: 10,
-    slug: "3d-case",
-    type: "phone-case",
-  },
-  {
-    id: 203,
-    name: "3D CASE",
-    image: "/Component 8.png",
-    price: 35.0,
-    discountPrice: 30.0,
-    stock: 10,
-    slug: "3d-case",
-    type: "phone-case",
-  },
-];
 export default function PhoneCasesPage() {
   const params = useParams();
   const router = useRouter();
   const { id, type } = params;
   const { addToCart } = useCart();
+
+  const { data, error, isLoading } = useFindAllCaseQuery({
+    type: typeof id === "string" ? id : undefined,
+    slug: typeof type === "string" ? type : undefined,
+  });
+  if (error) {
+    if ("data" in error) {
+      const errData = error.data as { message: string };
+      alert(errData.message);
+      console.log("error", error);
+    } else {
+      alert("Something went wrong");
+    }
+    return <div>Error occurred</div>;
+  }
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
+  const caseCategories: TCartItem[] = data ? (data as TCartItem[]) : [];
 
   const handleBuyNow = (item: TCartItem) => {
     const cartItem = {
@@ -56,7 +46,7 @@ export default function PhoneCasesPage() {
     addToCart(cartItem);
     router.push("/CheckOut");
   };
-
+  // console.log(caseCategories);
   return (
     <div className="p-4 flex flex-col items-center justify-center min-h-screen bg-[#ffffff]">
       <div className="w-[90%] flex flex-col gap-11 justify-center items-center mb-5 mt-5 h-[100%]">
@@ -70,7 +60,7 @@ export default function PhoneCasesPage() {
         <div className="flex flex-wrap justify-center gap-24">
           {caseCategories.map((item, index) => {
             const href = `/buy/${item.id}`;
-
+            console.log(item)
             return (
               <div
                 key={index}

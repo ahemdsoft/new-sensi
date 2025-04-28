@@ -8,7 +8,7 @@ export default function ProductsPage() {
   const [formData, setFormData] = useState<
     Omit<TCartItem, "image"> & { image?: File }
   >({
-    id: 0,
+    id: "",
     name: "",
     price: 0,
     type: "",
@@ -132,8 +132,7 @@ export default function ProductsPage() {
               className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm"
             />
           </div>
-
-          {/* Type */}
+          {/* Type Select Dropdown */}
           <div>
             <label
               htmlFor="type"
@@ -141,15 +140,23 @@ export default function ProductsPage() {
             >
               Type
             </label>
-            <input
-              type="text"
+            <select
               name="type"
               id="type"
               value={formData.type}
-              onChange={handleChange}
+              onChange={
+                handleChange as unknown as React.ChangeEventHandler<HTMLSelectElement>
+              }
               required
-              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm"
-            />
+              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            >
+              <option value="">Select a type</option>
+              <option value="2d">2d</option>
+              <option value="2d-max">2d-max</option>
+              <option value="soft">soft</option>
+              <option value="3d-hard">3d-hard</option>
+              {/* Add more options as needed */}
+            </select>
           </div>
 
           {/* Stock */}

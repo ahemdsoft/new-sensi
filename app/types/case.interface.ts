@@ -1,5 +1,5 @@
 export type TCartItem = {
-    id: number;
+    id: string;
     name: string;
     discountPrice: number;
     stock: number;
