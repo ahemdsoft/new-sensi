@@ -1,9 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element */
 'use client';
 
 import { useState } from "react";
 import { useCart } from "../context/CartContext";
 import Link from "next/link";
-import Image from "next/image";
 
 export default function CartOption() {
   const [cartOpen, setCartOpen] = useState(false);
@@ -11,7 +12,7 @@ export default function CartOption() {
 
   // ✅ Updated total calculation using quantity
   const totalPrice = cartItems.reduce((total, item) => {
-    return total + (item.price * (item.quantity || 1));
+    return total + (item.price as number * (item.quantity || 1));
   }, 0);
 
   return (
@@ -72,11 +73,11 @@ export default function CartOption() {
           ) : (
             <>
               <div className="space-y-4 flex-grow overflow-y-auto">
-                {cartItems.map((item) => (
+                {cartItems.map((item: any) => (
                   <div key={item.id} className="flex flex-col p-2 border rounded">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center space-x-2">
-                        <Image
+                        <img
                           src={item.image}
                           alt={item.name}
                           width={64}
@@ -90,7 +91,7 @@ export default function CartOption() {
                         </div>
                       </div>
                       <button
-                        onClick={() => removeFromCart(item.id)}
+                        onClick={() => removeFromCart(item.id as string)}
                         className="text-red-500 hover:text-red-700"
                       >
                         Remove

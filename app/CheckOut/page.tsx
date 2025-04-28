@@ -1,8 +1,9 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { useCart } from "../context/CartContext";
 import { FiTrash2 } from "react-icons/fi";
 
@@ -64,7 +65,7 @@ export default function CheckOut() {
     }));
   };
 
-  const handleRemoveItem = (itemId: number) => {
+  const handleRemoveItem = (itemId: string) => {
     removeFromCart(itemId);
   };
 
@@ -279,17 +280,16 @@ export default function CheckOut() {
               <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
 
               <div className="space-y-4 mb-6">
-                {cartItems.map((item) => (
+                {cartItems.map((item: any) => (
                   <div
                     key={item.id}
                     className="flex items-center border-b pb-4"
                   >
                     <div className="w-20 h-20 relative mr-4">
-                      <Image
+                      <img
                         src={item.image}
                         alt={item.name}
-                        fill
-                        className="object-cover rounded"
+                        className="object-cover w-full h-full rounded"
                       />
                     </div>
                     <div className="flex-1">
