@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <CartProvider>
           <Navbar />
-          <main className="flex-grow">
+          <main className="flex-grow text-black">
             <StoreProvider>{children}</StoreProvider>
           </main>
           <Footer />

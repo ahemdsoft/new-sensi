@@ -1,15 +1,9 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { TCartItem } from '../types/case.interface';
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  type: string;
-  brand: string;
-  mobile: string;
+interface CartItem extends Partial<TCartItem> {
   quantity: number; // added quantity here
 }
 

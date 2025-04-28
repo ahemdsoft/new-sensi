@@ -1,71 +1,60 @@
-'use client';
-import { useParams, useRouter } from 'next/navigation';
-import CaseCard3 from '@/app/components/cart3';
-import { useCart } from '@/app/context/CartContext';
+"use client";
+import { useParams, useRouter } from "next/navigation";
+import CaseCard3 from "@/app/components/cart3";
+import { useCart } from "@/app/context/CartContext";
+import { TCartItem } from "@/app/types/case.interface";
 
 // Dummy JSON data
-const caseCategories = [
+const caseCategories: TCartItem[] = [
   {
     id: 201,
-    name: '3D CASE',
-    image: '/Component 6.png',
-    price: 25.00,
-    discountPrice: 20.00,
-    mobile: 'iphone 13',
+    name: "3D CASE",
+    image: "/Component 6.png",
+    price: 25.0,
+    discountPrice: 20.0,
     stock: 10,
-    brand: 'apple'
+    slug: "3d-case",
+    type: "phone-case",
   },
   {
     id: 202,
-    name: '3D CASE',
-    image: '/Component 7.png',
-    price: 35.00,
-    discountPrice: 30.00,
-    mobile: 'iphone 13',
+    name: "3D CASE",
+    image: "/Component 7.png",
+    price: 35.0,
+    discountPrice: 30.0,
     stock: 10,
-    brand: 'apple'
+    slug: "3d-case",
+    type: "phone-case",
   },
   {
     id: 203,
-    name: '3D CASE',
-    image: '/Component 8.png',
-    price: 35.00,
-    discountPrice: 30.00,
-    mobile: 'iphone 13',
-    brand: 'apple',
+    name: "3D CASE",
+    image: "/Component 8.png",
+    price: 35.0,
+    discountPrice: 30.0,
     stock: 10,
+    slug: "3d-case",
+    type: "phone-case",
   },
 ];
-
-type CartItem = {
-  id: number;
-  name: string;
-  discountPrice: number;
-  image: string;
-  mobile: string;
-  brand: string;
-};
-
 export default function PhoneCasesPage() {
   const params = useParams();
   const router = useRouter();
   const { id, type } = params;
   const { addToCart } = useCart();
 
-  const handleBuyNow = (item: CartItem) => {
+  const handleBuyNow = (item: TCartItem) => {
     const cartItem = {
       id: item.id,
       name: item.name,
-      price: item.discountPrice,
+      price: item.discountPrice as number,
       image: item.image,
-      type: 'phone-case',
-      mobile: item.mobile,
-      brand: item.brand,
+      type: item.type as string,
       quantity: 1,
     };
-    
+
     addToCart(cartItem);
-    router.push('/CheckOut');
+    router.push("/CheckOut");
   };
 
   return (
@@ -83,8 +72,8 @@ export default function PhoneCasesPage() {
             const href = `/buy/${item.id}`;
 
             return (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className="case-card"
                 data-id={item.id}
                 data-name={item.name}
@@ -92,12 +81,12 @@ export default function PhoneCasesPage() {
                 data-price={item.price}
                 data-discount-price={item.discountPrice}
               >
-                {(1 <= item.stock) ? (
+                {1 <= item.stock ? (
                   <CaseCard3
                     image={item.image}
                     name={item.name}
-                    price={item.price}
-                    discountPrice={item.discountPrice}
+                    price={item.price as number}
+                    discountPrice={item.discountPrice as number}
                     href={href}
                     onBuyNow={() => handleBuyNow(item)}
                     quantity={1}

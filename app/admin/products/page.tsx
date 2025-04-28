@@ -1,21 +1,24 @@
-'use client';
-import { useState } from 'react';
-import Image from 'next/image';
+"use client";
+import { useState } from "react";
+import Image from "next/image";
+import { TCartItem } from "@/app/types/case.interface";
+import { useCreateCaseMutation } from "@/app/redux/services/case.service";
 
 export default function ProductsPage() {
-  const [formData, setFormData] = useState({
-    name: '',
-    price: '',
-    image: '',
-    type: '',
-    brand: '',
-    mobile: '',
-    stock: '',
-    id: ''
+  const [formData, setFormData] = useState<
+    Omit<TCartItem, "image"> & { image?: File }
+  >({
+    id: 0,
+    name: "",
+    price: 0,
+    type: "",
+    stock: 0,
+    slug: "",
+    discountPrice: 0,
   });
 
+  const [createCase, { data, error, isLoading }] = useCreateCaseMutation();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
-  const [productCount, setProductCount] = useState<number>(0);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -25,7 +28,7 @@ export default function ProductsPage() {
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setFormData((prev) => ({ ...prev, image: file.name }));
+      setFormData((prev) => ({ ...prev, image: file }));
       setImagePreview(URL.createObjectURL(file));
     }
   };
@@ -33,56 +36,55 @@ export default function ProductsPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-
-
-
-
-
-
-
-    try {
-      const res = await fetch('/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(formData)
-      });
-
-      if (res.ok) {
-        setProductCount((prev) => prev + 1);
-        setFormData({
-          id: '',
-          name: '',
-          price: '',
-          image: '',
-          type: '',
-          brand: '',
-          mobile: '',
-          stock: ''
-        });
-        setImagePreview(null);
-      } else {
-        alert('Failed to submit product.');
-      }
-    } catch (err) {
-      console.error('Error submitting:', err);
-      alert('Error submitting product.');
+    if (!formData.image) {
+      alert("Please select an image");
+      return;
     }
+
+    const formDataToSend = new FormData();
+    formDataToSend.append("name", formData.name);
+    formDataToSend.append("price", formData.price.toString());
+    formDataToSend.append("image", formData.image); // Changed from "file" to "image"
+    formDataToSend.append("type", formData.type);
+    formDataToSend.append("stock", formData.stock.toString());
+    formDataToSend.append("slug", formData.slug);
+    formDataToSend.append("discountPrice", formData.discountPrice.toString());
+
+    createCase(formDataToSend);
   };
 
+  if (error && !isLoading) {
+    if (error && "data" in error) {
+      const errData = error.data as { message: string }; // 👈 define the structure
+      alert(errData.message);
+      console.log("error", error);
+    } else {
+      alert("something went wrong");
+    }
+  }
+  if (data && !isLoading) {
+    alert("Case created successfully");
+  }
   return (
     <div className="max-w-6xl mx-auto p-6 space-y-10">
-      <h1 className="text-3xl font-bold text-center text-indigo-700">📦 Add New Product</h1>
+      <h1 className="text-3xl font-bold text-center text-indigo-700">
+        📦 Add New Product
+      </h1>
 
       <form
         onSubmit={handleSubmit}
         className="bg-white p-6 rounded-2xl shadow-xl space-y-6"
+        encType="multipart/form-data"
       >
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {/* Product Name */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">Product Name</label>
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Product Name
+            </label>
             <input
               type="text"
               name="name"
@@ -96,7 +98,12 @@ export default function ProductsPage() {
 
           {/* Price */}
           <div>
-            <label htmlFor="price" className="block text-sm font-medium text-gray-700">Price</label>
+            <label
+              htmlFor="price"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Price
+            </label>
             <input
               type="number"
               name="price"
@@ -108,37 +115,32 @@ export default function ProductsPage() {
             />
           </div>
 
-          {/* Brand */}
+          {/* Discount Price */}
           <div>
-            <label htmlFor="brand" className="block text-sm font-medium text-gray-700">Brand</label>
+            <label
+              htmlFor="discountPrice"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Discount Price
+            </label>
             <input
-              type="text"
-              name="brand"
-              id="brand"
-              value={formData.brand}
+              type="number"
+              name="discountPrice"
+              id="discountPrice"
+              value={formData.discountPrice}
               onChange={handleChange}
-              required
-              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm"
-            />
-          </div>
-
-          {/* Mobile Model */}
-          <div>
-            <label htmlFor="mobile" className="block text-sm font-medium text-gray-700">Mobile Model</label>
-            <input
-              type="text"
-              name="mobile"
-              id="mobile"
-              value={formData.mobile}
-              onChange={handleChange}
-              required
               className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm"
             />
           </div>
 
           {/* Type */}
           <div>
-            <label htmlFor="type" className="block text-sm font-medium text-gray-700">Type</label>
+            <label
+              htmlFor="type"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Type
+            </label>
             <input
               type="text"
               name="type"
@@ -152,7 +154,12 @@ export default function ProductsPage() {
 
           {/* Stock */}
           <div>
-            <label htmlFor="stock" className="block text-sm font-medium text-gray-700">Stock</label>
+            <label
+              htmlFor="stock"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Stock
+            </label>
             <input
               type="number"
               name="stock"
@@ -164,13 +171,19 @@ export default function ProductsPage() {
             />
           </div>
 
+          {/* slug */}
           <div>
-            <label htmlFor="stock" className="block text-sm font-medium text-gray-700">Id</label>
+            <label
+              htmlFor="slug"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Slug
+            </label>
             <input
-              type="number"
-              name="id"
-              id="id"
-              value={formData.id}
+              type="text"
+              name="slug"
+              id="slug"
+              value={formData.slug}
               onChange={handleChange}
               required
               className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm"
@@ -179,12 +192,19 @@ export default function ProductsPage() {
 
           {/* Image Upload */}
           <div className="col-span-full">
-            <label htmlFor="image" className="block text-sm font-medium text-gray-700">Product Image</label>
+            <label
+              htmlFor="image"
+              className="block text-sm font-medium text-gray-700"
+            >
+              Product Image
+            </label>
             <input
               type="file"
               accept="image/*"
               id="image"
+              name="image"
               onChange={handleImageChange}
+              required
               className="mt-1 block w-full rounded-md border-gray-300 p-2"
             />
             {imagePreview && (
@@ -197,25 +217,23 @@ export default function ProductsPage() {
                 />
               </div>
             )}
-            {formData.image && (
-              <p className="text-sm text-gray-500 mt-1">Selected: {formData.image}</p>
-            )}
           </div>
         </div>
 
         <button
           type="submit"
-          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-xl text-lg font-semibold"
+          disabled={isLoading}
+          className="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 px-6 rounded-xl text-lg font-semibold disabled:opacity-50"
         >
-          ➕ Add Product
+          {isLoading ? "Processing..." : "➕ Add Product"}
         </button>
       </form>
 
       <div className="text-center mt-10">
         <h2 className="text-xl font-bold text-gray-800">
-          🧾 Total Products (This session): <span className="text-indigo-600">{productCount}</span>
+          🧾 Total Products (This session):{" "}
+          <span className="text-indigo-600">0</span>
         </h2>
-        <p className="text-sm text-gray-500">(Will reset on refresh)</p>
       </div>
     </div>
   );
