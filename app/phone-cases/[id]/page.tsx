@@ -58,7 +58,7 @@ export default function PhoneCaseTypePage() {
       image: '/images/design/k-pop.jpg',
     },
   ];
-
+  
   return (
     <div className="p-4 flex flex-col items-center justify-center min-h-screen bg-[#f7edf7]">
       <div className="w-[80%] flex flex-col gap-11 justify-center items-center mb-5 mt-5 h-[100%]">

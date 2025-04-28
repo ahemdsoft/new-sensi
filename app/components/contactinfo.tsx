@@ -5,8 +5,8 @@ import Image from "next/image";
 export default function ContactInfo() {
   return (
     <div className="relative h-[100%] w-[100%] bg-black text-white px-6 py-12 gap-7 flex flex-col rounded-xl overflow-hidden">
-      <h2 className="text-2xl font-semibold">Contact Information</h2>
-      <p className="text-gray-400 mt-1">Say something to start a live chat!</p>
+      <h2 className="text-2xl  font-semibold">Contact Information</h2>
+      <p className="text-gray-400  mt-1">Say something to start a live chat!</p>
 
       <div className="mt-8 space-y-6">
         <div className="flex items-center space-x-4">

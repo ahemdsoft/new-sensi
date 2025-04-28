@@ -1,3 +1,5 @@
+import FadeIn from "../components/animation/fadein";
+
 export default function AboutUs() {
 
 
@@ -23,14 +25,15 @@ export default function AboutUs() {
      description: "You agree to use the platform’s content, including but not limited to videos, webinars, text, images, infographics, articles, assessments, ratings, and software (Content), solely for lawful purposes authorized by Onlinestaff. If you are accessing the platform from outside the United States, you are responsible for ensuring compliance with the laws of your jurisdiction and adhering to any restrictions imposed by U.S. government agencies. Any misuse or unauthorized use of the platform’s Content, including violation of the Terms, may result in termination of your account and access to the platform, and may subject you to legal action.",
    },{
      title: "Prospective Investor Accounts",
-     description: "f you are considering hiring a professional or offering services through Onlinestaff, you do so at your own risk. While Onlinestaff facilitates the connection between employers and professionals, it does not guarantee the quality of work or success of any job or service engagement. You are responsible for conducting due diligence and making informed decisions regarding the professionals you engage with or the opportunities you pursue.Onlinestaff is not responsible for verifying the accuracy of the information provided by users. It is the responsibility of each user, whether an employer or professional, to ensure that the information shared is accurate, and to seek legal, financial, or tax advice when necessary. Onlinestaff cannot be held accountable for the outcomes of any engagement, transaction, or interaction that occurs through the platform.",
+     description: "if you are considering hiring a professional or offering services through Onlinestaff, you do so at your own risk. While Onlinestaff facilitates the connection between employers and professionals, it does not guarantee the quality of work or success of any job or service engagement. You are responsible for conducting due diligence and making informed decisions regarding the professionals you engage with or the opportunities you pursue.Onlinestaff is not responsible for verifying the accuracy of the information provided by users. It is the responsibility of each user, whether an employer or professional, to ensure that the information shared is accurate, and to seek legal, financial, or tax advice when necessary. Onlinestaff cannot be held accountable for the outcomes of any engagement, transaction, or interaction that occurs through the platform.",
    },
   ]
    return (
+    <FadeIn delay={0.1}>
      <div className="min-h-screen w-full flex text-inter justify-center  items-center py-12">
        {Conditions.map((item, index)=>(<div key={index} className="max-w-7xl w-[80%]  flex gap-6 flex-wrap    sm:px-6 lg:px-8">
            <h1  className="text-3xl font-inter text-[#009C9A] font-bold p-6">{item.title}</h1>
-           <div className='border-2  w-[100%] h-full border-gray-100 p-6'>
+           <div className='border-2  w-[100%] h-full border-gray-100 text-black p-6'>
            <p className="text-sm font-inter">{item.description} </p>
 
 
@@ -44,6 +47,6 @@ export default function AboutUs() {
 
            </div> ))}
        </div></div>))}
-     </div>
+     </div></FadeIn>
    );
  } 

@@ -11,12 +11,12 @@ export default function PhoneCaseTypePage() {
     {
       name: 'ANIME DESIGN',
       slug: 'anime',
-      image: '/images/design/anime.jpg',
+      image: '/Component 6.png',
     },
     {
       name: 'MARVEL/DC DESIGN',
       slug: 'marvel-dc',
-      image: '/images/design/marvel-dc.jpg',
+      image: '/Component 6.png',
     },
     {
       name: 'CARS & BIKES DESIGN',
@@ -62,7 +62,7 @@ export default function PhoneCaseTypePage() {
 
   return (
     <div className="p-4 flex flex-col items-center justify-center min-h-screen bg-[#f7edf7]">
-      <div className="w-[60%] flex flex-col gap-11 justify-center items-center mb-5 mt-5 h-[100%]">
+      <div className="w-[65%] flex flex-col gap-11 justify-center items-center mb-5 mt-5 h-[100%]">
         <h1 className="text-6xl hover:shadow-[0px_4px_6px_#BF00FF78] font-bold md:w-[848px] md:h-[110] rounded-[15px] bg-[#3C1630] text-white w-full flex justify-center items-center">
           {id} Cases
         </h1>

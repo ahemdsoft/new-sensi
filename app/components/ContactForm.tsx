@@ -1,4 +1,5 @@
 "use client";
+
 import { useState, ChangeEvent, FormEvent } from "react";
 import SuccessPopup from "./SuccessPopup";
 
@@ -22,7 +23,7 @@ export default function ContactForm() {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
-      const res = await fetch("", {
+      const res = await fetch("/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData)
@@ -36,7 +37,7 @@ export default function ContactForm() {
   return (
     <>
       {showPopup && <SuccessPopup onClose={() => setShowPopup(false)} />}
-      <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4 w-full max-w-4xl mx-auto p-4">
+      <form onSubmit={handleSubmit} className="grid md:grid-cols-2 gap-4 w-full max-w-4xl text-black mx-auto p-4">
         <div>
           <label className="block text-sm">First Name</label>
           <input type="text" name="firstName" onChange={handleChange} required className="w-full border-b p-2" />
@@ -71,7 +72,7 @@ export default function ContactForm() {
           <textarea name="message" rows={4} onChange={handleChange} required className="w-full border-b p-2" />
         </div>
         <div className="md:col-span-2 text-right">
-          <button type="submit" className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">
+          <button type="submit" className="bg-black cursor-pointer hover:text-gray-300 text-white px-6 py-2 rounded-md hover:bg-gray-800">
             Send Message
           </button>
         </div>
