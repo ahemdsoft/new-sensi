@@ -14,11 +14,11 @@ const Footer = () => {
 
   const customerServices = [
     { name: 'About Us', href: '/about-us' },
-    { name: 'Terms & Conditions', href: '/terms-conditions' },
-    { name: 'FAQ', href: '/faq' },
-    { name: 'Privacy Policy', href: '/privacy-policy' },
-    { name: 'E-waste Policy', href: '/e-waste-policy' },
-    { name: 'Cancellation & Return Policy', href: '/cancellation-return-policy' },
+    { name: 'Terms & Conditions', href: '/about-us/terms-conditions' },
+    { name: 'FAQ', href: '/about-us/faq' },
+    { name: 'Privacy Policy', href: '/about-us/privacy-policy' },
+    { name: 'E-waste Policy', href: '/about-us/e-waste-policy' },
+    { name: 'Cancellation & Return Policy', href: '/about-us/cancellation-return-policy' },
   ];
 
   return (

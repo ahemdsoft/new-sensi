@@ -4,19 +4,24 @@ import Link from 'next/link';
 import { FiHeart, FiShoppingBag } from 'react-icons/fi';
 import { useParams } from 'next/navigation';
 import { useCart } from '../context/CartContext';
+import FadeInOnScroll from './animation/fadeinscrool';
 
 export default function CaseCard3({
   image,
   name,
   href,
+  onBuyNow,
   price,
   discountPrice,
+  quantity,
 }: {
   image: string;
   name: string;
   href: string;
-  price: string;
-  discountPrice: string;
+  onBuyNow?: () => void;
+  price: number;
+  discountPrice: number;
+  quantity: number;
 }) {
   const params = useParams();
   const type = params.type as string;
@@ -24,23 +29,39 @@ export default function CaseCard3({
 
   const handleAddToCart = () => {
     const cartItem = {
-      id: `${type}-${name}-${Date.now()}`,
+      id: Math.floor(Math.random() * 1000000),
       name,
       price: discountPrice,
       image,
-      type
+      type,
+      brand: '',
+      mobile: '',
+      quantity,
     };
-    
     addToCart(cartItem);
   };
 
   return (
-    <div className="w-[337px] h-[500px] bg-white rounded-[10.5px] flex flex-col justify-between border-2 border-gray-200 shadow-2xl">
+    <FadeInOnScroll delay={0.1}>
+    <div className="group w-[337px] h-[500px] bg-white rounded-[10.5px] flex flex-col justify-between border-2 border-gray-200 shadow-2xl">
+      {/* Existing content here */}
+    
+    
+      
       {/* Case Image */}
       <div className="flex justify-center items-center p-4">
-        <div className="relative w-[220px] h-[320px]">
-          <Image src={image} alt={name} fill className="object-contain" />
-        </div>
+        <Link href={href}>
+          <div className="perspective-[1000px] mt-2">
+            <div className="relative w-[220px] h-[320px] transform-gpu transition-transform duration-500 group-hover:scale-110 group-hover:z-20">
+              <Image
+                src={image}
+                alt={name}
+                fill
+                className="object-contain rounded-2xl"
+              />
+            </div>
+          </div>
+        </Link>
       </div>
 
       {/* Title */}
@@ -66,19 +87,28 @@ export default function CaseCard3({
         <FiHeart className="text-black text-[20px] cursor-pointer" />
 
         {/* Buy Now Button */}
-        <Link
-          href={href}
-          className="bg-[#3C1630] text-white font-bold px-6 py-2 rounded-full shadow hover:shadow-[0_4px_10px_#BF00FFA3] transition duration-200"
-        >
-          BUY NOW
-        </Link>
+        {onBuyNow ? (
+          <button
+            onClick={onBuyNow}
+            className="bg-[#3C1630] text-white font-bold px-6 cursor-pointer py-2 rounded-full shadow hover:shadow-[0_4px_10px_#BF00FFA3] transition duration-200"
+          >
+            BUY NOW
+          </button>
+        ) : (
+          <Link
+            href={href}
+            className="bg-[#3C1630] text-white font-bold px-6 py-2 rounded-full shadow hover:shadow-[0_4px_10px_#BF00FFA3] transition duration-200"
+          >
+            BUY NOW
+          </Link>
+        )}
 
         {/* Cart Icon */}
-        <FiShoppingBag 
-          className="text-black text-[20px] cursor-pointer cart-icon" 
+        <FiShoppingBag
+          className="text-black text-[20px] cursor-pointer"
           onClick={handleAddToCart}
         />
       </div>
-    </div>
+    </div> </FadeInOnScroll>
   );
 }

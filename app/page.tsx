@@ -2,25 +2,31 @@
 import CaseCard from './components/Cart';
 import Image from 'next/image';
 import Link from 'next/link';
+import Moreservise from './components/moreservise';
+import ProductSlider from './components/productslider';
+import SlideIn from './components/animation/slidein';
+import FadeInOnScroll from './components/animation/fadeinscrool';
+import Pop from './components/animation/pop';
+import FadeIn from './components/animation/fadein';
 const caseCategories = [
   {
     name: '2D MAX CASE',
-    image: '/images/2dmax.jpg',
+    image: '/Component 6.png',
     href: '/phone-cases/2d-max',
   },
   {
     name: '2D CASE',
-    image: '/images/2d.jpg',
+    image: '/Component 7.png',
     href: '/phone-cases/2d',
   },
   {
     name: 'SOFT CASE',
-    image: '/images/soft.jpg',
+    image: '/Component 8.png',
     href: '/phone-cases/soft',
   },
   {
     name: '3D CASE',
-    image: '/images/3d.jpg',
+    image: '/Component 13.png',
     href: '/phone-cases/3d',
   },
 
@@ -40,11 +46,13 @@ export default function Home() {
     { name: 'K-POP DESIGN', slug:'k-pop' },
   ];
 
-  return (
+  return (<FadeIn delay={0.1}>
     <main className='w'>
       {/* Background Section */}
       <section className="relative w-full min-h-screen overflow-hidden">
   {/* Fullscreen Background Image */}
+ 
+    
   <Image
   src="/image/bgh.png"
   alt="Background"
@@ -61,6 +69,7 @@ export default function Home() {
   <div className="relative z- min-h-screen flex flex-col md:flex-row items-center justify-center md:justify-end px-4 md:px-8 lg:px-12 py-8">
     <div className="w-full max-w-lg md:max-w-md lg:max-w-lg xl:max-w-xl space-y-3">
       {/* Design Collection Box */}
+      <SlideIn delay={0.1}>
       <div className="bg-white/95 backdrop-blur rounded-xl shadow-2xl p-6">
         <div className="mb-6">
           <h2 className="text-2xl md:text-3xl font-bold text-center text-white mb-6 py-3 px-4 rounded-lg bg-[#3C1630] border-2 border-white/20 hover:shadow-[0_4px_10px_#8400FF]">
@@ -89,7 +98,7 @@ export default function Home() {
         >
           Customise with your design
         </Link>
-      </div>
+      </div></SlideIn>
     </div>
   </div>
 </section>
@@ -108,7 +117,7 @@ export default function Home() {
     </div>
   </div>
 </section>
-
+<Pop delay={0.1}>
 <section className="relative w-full">
       <Image
   src="/image/Group211.png"
@@ -120,8 +129,21 @@ export default function Home() {
   className="w-full h-auto"
 />
 
+        </section></Pop>
+        <section className='w-full h-[100%] mb-12 flex flex-col bg-gray-50 pt-16 pb-12 justify-center items-center'>
+          
+          <div className='w-[85%] ml-3.5 h-[60%] flex flex-col gap-10 bg-gray-50'>
+            <div className='text- text-2xl font-Montaga underline-offset-4 underline '><FadeInOnScroll>Latest <span className='text-[#008ECC]'>Product</span></FadeInOnScroll></div>
+          <div className='w-full h-[100%] flex justify-center items-center'>
+          <ProductSlider/>
+          </div>
+          </div>
+
+        </section>
+        <section className='w-full h-[100%] mb-12 flex justify-center items-center bg-white'>
+          <Moreservise/>
         </section>
 
-    </main>
+    </main></FadeIn>
   );
 }
