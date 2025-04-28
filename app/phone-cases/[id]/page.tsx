@@ -1,64 +1,45 @@
-'use client';
-import { useParams } from 'next/navigation';
-import CaseCardType2 from '@/app/components/cart2';
+"use client";
+import { useParams } from "next/navigation";
+import CaseCardType2 from "@/app/components/cart2";
+import { TCartItem } from "@/app/types/case.interface";
 
 export default function PhoneCaseTypePage() {
   const params = useParams();
   const id = params?.id; // this is your main category like "2d", "3d", etc.
- 
-  const caseCategories = [
+
+  const caseCategories: TCartItem[] = [
     {
-      name: 'ANIME DESIGN',
-      slug: 'anime',
-      image: '/images/design/anime.jpg',
+      id: 201,
+      name: "3D CASE",
+      image: "/Component 6.png",
+      price: 25.0,
+      discountPrice: 20.0,
+      stock: 10,
+      slug: "3d-case",
+      type: "phone-case",
     },
     {
-      name: 'MARVEL/DC DESIGN',
-      slug: 'marvel-dc',
-      image: '/images/design/marvel-dc.jpg',
+      id: 202,
+      name: "3D CASE",
+      image: "/Component 7.png",
+      price: 35.0,
+      discountPrice: 30.0,
+      stock: 10,
+      slug: "3d-case",
+      type: "phone-case",
     },
     {
-      name: 'CARS & BIKES DESIGN',
-      slug: 'cars-bikes',
-      image: '/images/design/cars-bikes.jpg',
-    },
-    {
-      name: 'COUPLE DESIGN',
-      slug: 'couple',
-      image: '/images/design/couple.jpg',
-    },
-    {
-      name: 'FOOTBALL DESIGN',
-      slug: 'football',
-      image: '/images/design/football.jpg',
-    },
-    {
-      name: 'TYPOGRAPHY DESIGN',
-      slug: 'typography',
-      image: '/images/design/typography.jpg',
-    },
-    {
-      name: 'GAMING DESIGN',
-      slug: 'gaming',
-      image: '/images/design/gaming.jpg',
-    },
-    {
-      name: 'ISLAMIC DESIGN',
-      slug: 'islamic',
-      image: '/images/design/islamic.jpg',
-    },
-    {
-      name: 'LADIES DESIGN',
-      slug: 'ladies',
-      image: '/images/design/ladies.jpg',
-    },
-    {
-      name: 'K-POP DESIGN',
-      slug: 'k-pop',
-      image: '/images/design/k-pop.jpg',
+      id: 203,
+      name: "3D CASE",
+      image: "/Component 8.png",
+      price: 35.0,
+      discountPrice: 30.0,
+      stock: 10,
+      slug: "3d-case",
+      type: "phone-case",
     },
   ];
-  
+
   return (
     <div className="p-4 flex flex-col items-center justify-center min-h-screen bg-[#f7edf7]">
       <div className="w-[80%] flex flex-col gap-11 justify-center items-center mb-5 mt-5 h-[100%]">
@@ -70,7 +51,7 @@ export default function PhoneCaseTypePage() {
         </h2>
 
         <div className="flex flex-wrap justify-center gap-24">
-          {caseCategories.map((item, index) => (
+          {caseCategories.map((item: TCartItem, index: number) => (
             <CaseCardType2
               key={index}
               image={item.image}
