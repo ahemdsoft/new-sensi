@@ -1,58 +1,44 @@
-'use client';
-import { useState } from 'react';
-import Image from 'next/image';
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  image: string;
-  type: string;
-  brand: string;
-  mobile: string;
-  stock: number;
-}
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @next/next/no-img-element */
+"use client";
+import { useEffect, useState } from "react";
+// import Image from "next/image";
+import { TCartItem } from "@/app/types/case.interface";
+import { useRouter } from "next/navigation";
+import {
+  useDeleteCaseMutation,
+  useFindAllCaseQuery,
+} from "@/app/redux/services/case.service";
 
 // Dummy product data
-const dummyProducts: Product[] = [
-  {
-    id: 1,
-    name: 'iPhone 14 Pro',
-    price: 145000,
-    image: '/iphone.jpg',
-    type: 'Smartphone',
-    brand: 'Apple',
-    mobile: 'A2890',
-    stock: 12
-  },
-  {
-    id: 2,
-    name: 'Samsung Galaxy S23',
-    price: 120000,
-    image: '/samsung.jpg',
-    type: 'Smartphone',
-    brand: 'Samsung',
-    mobile: 'SM-S911B',
-    stock: 8
-  },
-  {
-    id: 3,
-    name: 'Redmi Note 12',
-    price: 28000,
-    image: '/redmi.jpg',
-    type: 'Smartphone',
-    brand: 'Xiaomi',
-    mobile: '22111317I',
-    stock: 30
-  }
-];
 
 export default function AllProductsPage() {
-  const [search, setSearch] = useState('');
-  const [products, setProducts] = useState<Product[]>(dummyProducts);
+  const { data, error } = useFindAllCaseQuery({});
+  const [deleteCase, deleteRes] = useDeleteCaseMutation();
+  let dummyProducts: TCartItem[] = [];
+  useEffect(() => {
+    if (data) {
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      dummyProducts = data;
+      setProducts(data);
+    }
+    if (error) {
+      if (error && "data" in error) {
+        const errData = error.data as { message: string }; // 👈 define the structure
+        alert(errData.message);
+        console.log("error", error);
+      } else {
+        alert("something went wrong");
+      }
+    }
+  }, [data, error]);
+  const [search, setSearch] = useState("");
+  const [products, setProducts] = useState<TCartItem[]>(dummyProducts);
+  const router = useRouter();
 
+  console.log("products", products);
   const handleSearch = () => {
-    if (search.trim() === '') {
+    if (search.trim() === "") {
       setProducts(dummyProducts);
       return;
     }
@@ -64,24 +50,39 @@ export default function AllProductsPage() {
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
 
-  const handleDelete = async (id: number) => {
-    const deleted=await fetch(`http://localhost:5000/products/delete/${id}`,{
-      method:'DELETE'
-      
-    })
-   if(deleted){
-    setProducts(products.filter((product)=>product.id!==id));
-   }
+  const handleDelete = async (id: string) => {
+    await deleteCase(id);
+  };
+
+  useEffect(() => {
+    if (deleteRes.isSuccess) {
+      alert("Product deleted successfully");
+      router.push("/admin/allproduct");
+    }
+    if(deleteRes.isError) {
+      if ('data' in (deleteRes.error as any)) {
+        const errorData = (deleteRes.error as any).data as { message?: string };
+        alert(errorData.message || 'Failed to delete product');
+      } else {
+        alert('Failed to delete product');
+      }
+    }
+  }, [deleteRes]);
+
+  const handleEdit = async (id: string) => {
+    router.push(`/admin/allproduct/${id}`);
   };
 
   return (
     <div className="max-w-7xl mx-auto p-6 space-y-6">
-      <h1 className="text-3xl font-bold text-center text-indigo-700">📦 All Products</h1>
+      <h1 className="text-3xl font-bold text-center text-indigo-700">
+        📦 All Products
+      </h1>
 
       <div className="flex gap-3 max-w-xl mx-auto">
         <input
@@ -110,20 +111,33 @@ export default function AllProductsPage() {
               className="border rounded-xl p-4 shadow-md bg-white flex flex-col gap-3"
             >
               <div className="relative w-full h-40">
-                <Image
+                <img
                   src={product.image}
                   alt={product.name}
-                  fill
-                  className="object-cover rounded-lg"
+                  className="object-cover h-full w-full rounded-lg"
                 />
               </div>
               <div className="text-sm text-gray-600">ID: {product.id}</div>
-              <div className="text-lg font-semibold text-gray-800">{product.name}</div>
-              <div className="text-sm text-gray-500">Brand: {product.brand}</div>
-              <div className="text-sm text-gray-500">Model: {product.mobile}</div>
+              <div className="text-lg font-semibold text-gray-800">
+                {product.name}
+              </div>
               <div className="text-sm text-gray-500">Type: {product.type}</div>
-              <div className="text-sm text-gray-500">Stock: {product.stock}</div>
-              <div className="text-md font-bold text-indigo-700">৳{product.price}</div>
+              <div className="text-sm text-gray-500">
+                Stock: {product.stock}
+              </div>
+              <div className="text-sm text-gray-500">Slug: {product.slug}</div>
+              <div className="text-md font-bold text-indigo-700">
+                ৳Discount Price:{product.discountPrice}
+              </div>
+              <div className="text-md font-bold text-indigo-700">
+                ৳Price {product.price}
+              </div>
+              <button
+                onClick={() => handleEdit(product.id)}
+                className="mt-auto bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg"
+              >
+                Edit
+              </button>
               <button
                 onClick={() => handleDelete(product.id)}
                 className="mt-auto bg-red-500 hover:bg-red-600 text-white py-2 rounded-lg"
