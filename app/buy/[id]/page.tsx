@@ -12,7 +12,7 @@ export default function BuyNowPage() {
   const { addToCart } = useCart();
   console.log(id);
   const product = {
-    id: 1,
+    id: "1",
     name: "Cool Sneakers",
     price: 1200,
     discountPrice: 999,

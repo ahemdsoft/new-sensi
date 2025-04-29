@@ -35,7 +35,7 @@ const brandData: BrandData = {
 };
 
 type CartItem = {
-  id: number;
+  id: string;
   name: string;
   price: number;
   image: string;
@@ -88,7 +88,7 @@ export default function Customization() {
       setLoading(false);
 
       return {
-        id: Date.now(),
+        id: '',
         name: `${selectedBrand} ${selectedModel} ${selectedType} Case`,
         price: result.price,
         image: imagePreview || "",
