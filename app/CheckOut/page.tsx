@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import { FiTrash2 } from "react-icons/fi";
+import { useCreateOrderMutation } from "../redux/services/order.service";
 
 interface DeliveryOption {
   charge: number;
@@ -25,6 +26,9 @@ export default function CheckOut() {
   const [selectedDelivery, setSelectedDelivery] =
     useState<DeliveryOption | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
+  const [createOrder, orderRes] = useCreateOrderMutation();
+
+  const { data, error, isLoading } = orderRes;
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -33,6 +37,8 @@ export default function CheckOut() {
     address: "",
     city: "",
     zipCode: "",
+    brand: "",
+    model: "",
     paymentMethod: "cash",
   });
 
@@ -77,30 +83,22 @@ export default function CheckOut() {
     }
 
     try {
-      // Simulate API call
-      const response = await fetch("/api/place-order", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          items: cartItems,
-          subtotal,
-          deliveryCharge: selectedDelivery,
-          totalPrice,
-          formData,
-        }),
-      });
-
-      if (!response.ok) {
-        // Show success popup
-        setShowSuccessPopup(true);
-        clearCart(); // Clear the cart after successful order
-      } else {
-        const errorData = await response.json().catch(() => null);
-        console.error("Order placement failed:", errorData);
-        alert("Failed to place order. Please try again.");
-      }
+      const cartItem = cartItems.map((item) => ({
+        name: item.name,
+        price: item.price,
+        image: item.image,
+        type: item.type,
+        quantity: item.quantity,
+      }));
+      const body = {
+        items: cartItem,
+        subtotal,
+        deliveryCharge: selectedDelivery,
+        totalPrice,
+        ...formData,
+      };
+      console.log("body", body);
+      await createOrder(body);
     } catch (error) {
       console.error("Error placing order:", error);
       alert("An error occurred. Please try again.");
@@ -111,6 +109,25 @@ export default function CheckOut() {
     setShowSuccessPopup(false);
     router.push("/");
   };
+
+  useEffect(() => {
+    
+  if (data) {
+    // Show success popup
+    setShowSuccessPopup(true);
+    clearCart(); // Clear the cart after successful order
+  }
+  if (error || isLoading) {
+    if (error && "data" in error) {
+      const errData = error.data as { message: string }; // 👈 define the structure
+      alert(errData.message);
+      console.log("error", error);
+    } else {
+      alert("something went wrong");
+    }
+  }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[data, error]);
 
   return (
     <div className="">
@@ -193,6 +210,42 @@ export default function CheckOut() {
 
                 <div>
                   <label
+                    htmlFor="brand"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Mobile Brand
+                  </label>
+                  <input
+                    type="tel"
+                    id="brand"
+                    name="brand"
+                    value={formData.brand}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="model"
+                    className="block text-sm font-medium text-gray-700 mb-1"
+                  >
+                    Mobile Model
+                  </label>
+                  <input
+                    type="tel"
+                    id="model"
+                    name="model"
+                    value={formData.model}
+                    onChange={handleInputChange}
+                    required
+                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label
                     htmlFor="address"
                     className="block text-sm font-medium text-gray-700 mb-1"
                   >
@@ -261,8 +314,6 @@ export default function CheckOut() {
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                   >
                     <option value="cash">Cash on Delivery</option>
-                
-                    
                   </select>
                 </div>
 
@@ -422,6 +473,7 @@ export default function CheckOut() {
                 email shortly.
               </p>
               <button
+                disabled={isLoading}
                 onClick={closeSuccessPopup}
                 className="bg-[#3C1630] text-white font-bold py-2 px-6 rounded-full shadow hover:shadow-[0_4px_10px_#BF00FFA3] transition duration-200"
               >
