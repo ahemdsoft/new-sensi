@@ -2,49 +2,32 @@
 import { useRouter } from 'next/navigation';
 import CaseCard3 from '@/app/components/cart3';
 import { useCart } from '@/app/context/CartContext';
+import { TCartItem } from '../types/case.interface';
 
 // Dummy JSON data
 const caseCategories = [
   {
-    id: 201,
+    id: "201",
     name: '3D CASE',
     image: '/Component 6.png',
     price: 25.00,
     discountPrice: 20.00,
-    mobile: 'iphone 13',
     stock: 10,
-    brand: 'apple'
+    slug: '3d-case',
+    type: 'phone-case',
   },
   {
-    id: 202,
+    id: "202",
     name: '3D CASE',
     image: '/Component 7.png',
     price: 35.00,
     discountPrice: 30.00,
-    mobile: 'iphone 13',
     stock: 10,
-    brand: 'apple'
-  },
-  {
-    id: 203,
-    name: '3D CASE',
-    image: '/Component 8.png',
-    price: 35.00,
-    discountPrice: 30.00,
-    mobile: 'iphone 13',
-    brand: 'apple',
-    stock: 10,
+    slug: '3d-case',
+    type: 'phone-case',
   },
 ];
 
-type CartItem = {
-  id: number;
-  name: string;
-  discountPrice: number;
-  image: string;
-  mobile: string;
-  brand: string;
-};
 
 export default function PopHolder() {
 
@@ -52,15 +35,13 @@ export default function PopHolder() {
 
   const { addToCart } = useCart();
 
-  const handleBuyNow = (item: CartItem) => {
+  const handleBuyNow = (item: TCartItem) => {
     const cartItem = {
       id: item.id,
       name: item.name,
       price: item.discountPrice,
       image: item.image,
       type: 'phone-case',
-      mobile: item.mobile,
-      brand: item.brand,
       quantity: 1,
     };
     
