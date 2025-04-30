@@ -22,7 +22,7 @@ const Footer = () => {
   ];
 
   return (
-    <footer className="bg-[#2B2D2D] font-[sans-serif] text-white relative overflow-hidden">
+    <footer className="bg-[#2B2D2D] font-[sans-serif] z-0 text-white relative overflow-hidden">
       {/* Curved Lines Design */}
       <div className="absolute top-0 right-0 w-[300px] h-[300px] pointer-events-none">
         <Image

@@ -201,7 +201,7 @@ export default function Customization() {
   ))}
 </div>
 
-            <div>price:{initialPrice}</div>
+            <div className="border-gray-300 border-2 p-1 flex rounded-2xl"><div className="text-[#11802e]">Price</div>:{initialPrice}</div>
 
             <Input className="cursor-pointer" type="file" onChange={handleImageUpload} />
             <Textarea

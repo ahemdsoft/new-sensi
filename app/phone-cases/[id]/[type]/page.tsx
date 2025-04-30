@@ -28,7 +28,10 @@ export default function PhoneCasesPage() {
   }
 
   if (isLoading) {
-    return <div>Loading...</div>;
+    return <div className="h-[100%] absolute flex justify-center items-center">Loading...</div>;
+  }
+  if (!data) {
+    return <div className="h-[100%] absolute flex justify-center items-center">No data found</div>;
   }
 
   const caseCategories: TCartItem[] = data ? (data as TCartItem[]) : [];
