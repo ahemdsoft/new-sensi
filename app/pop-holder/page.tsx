@@ -46,7 +46,7 @@ export default function PopHolder() {
     };
     
     addToCart(cartItem);
-    router.push('/CheckOut');
+    router.push('/buy/' + item.id);
   };
 
   return (

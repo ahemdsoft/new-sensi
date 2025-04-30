@@ -127,7 +127,7 @@ export default function DesignCollectionPage() {
     };
 
     addToCart(cartItem);
-    router.push("/CheckOut");
+    router.push("/buy/" + item.id); // Redirect to the buy page with the item's id
   };
 
   return (

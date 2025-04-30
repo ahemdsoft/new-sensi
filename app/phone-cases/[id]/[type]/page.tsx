@@ -44,7 +44,7 @@ export default function PhoneCasesPage() {
     };
 
     addToCart(cartItem);
-    router.push("/CheckOut");
+    router.push("/buy/" + item.id);
   };
   // console.log(caseCategories);
   return (
