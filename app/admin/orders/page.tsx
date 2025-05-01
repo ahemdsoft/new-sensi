@@ -6,7 +6,7 @@ import { useState } from 'react';
 import { useGetAllForAdminQuery, useUpdateOrderMutation } from '@/app/redux/services/order.service';
 
 export default function OrdersPage() {
-  const { data: orders = [], error, isLoading } = useGetAllForAdminQuery([]);
+  const { data: orders = [], error, isLoading } = useGetAllForAdminQuery({});
   const [updateOrderStatus] = useUpdateOrderMutation();
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
   const [orderStatuses, setOrderStatuses] = useState<Record<string, string>>({});

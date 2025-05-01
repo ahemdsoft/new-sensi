@@ -34,11 +34,12 @@ export const orderApi = createApi({
         body,
       }),
     }),
-    getAllForAdmin: build.query<any, any>({
-      query: () => ({
-        url: "",
+    getAllForAdmin: build.query<any, { userId?: string }>({
+      query: ({ userId }) => ({
+        url: userId ? `?userId=${userId}` : '',
       }),
     }),
+    
     updateOrder: build.mutation<any, any>({
       query: ({ body, orderId }) => {
         console.log("body", body, "id", orderId);
@@ -49,6 +50,14 @@ export const orderApi = createApi({
         })
       }
     }),
+
+    sentCode: build.mutation<any, any>({
+      query: (body) => ({
+        url: "sentCode",
+        method: "POST",
+        body,
+      }),
+    })
   }),
 });
 
@@ -59,4 +68,5 @@ export const {
   useUploadImageMutation,
   useGetAllForAdminQuery,
   useUpdateOrderMutation,
+  useSentCodeMutation
 } = orderApi;
