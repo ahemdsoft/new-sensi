@@ -51,6 +51,7 @@ type CartItem = {
   brand: string;
   mobile: string;
   quantity: number;
+  file: File;
 };
 
 export default function Customization() {
@@ -77,7 +78,7 @@ export default function Customization() {
 
   const submitFormAndCreateCartItem = async (): Promise<CartItem | null> => {
     if (!selectedBrand || !selectedModel || !selectedType || !image) {
-      console.warn("Please fill in all required fields.");
+      alert("Please fill in all required fields.");
       return null;
     }
 
@@ -92,7 +93,8 @@ export default function Customization() {
       type: "custom",
       brand: selectedBrand,
       mobile: selectedModel,
-      quantity
+      quantity,
+      file: image
     };
   };
 

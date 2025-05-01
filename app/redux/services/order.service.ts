@@ -13,10 +13,17 @@ export const orderApi = createApi({
         method: 'POST',
         body,
       })
+    }),
+    uploadImage: build.mutation<any, any>({
+      query: (body) => ({
+        url: 'uploadImage',
+        method: 'POST',
+        body,
+      })
     })
   }),
 })
 
 // Export hooks for usage in functional components, which are
 // auto-generated based on the defined endpoints
-export const { useCreateOrderMutation } = orderApi
+export const { useCreateOrderMutation, useUploadImageMutation } = orderApi

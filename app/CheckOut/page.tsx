@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
@@ -6,7 +7,10 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import { FiTrash2 } from "react-icons/fi";
-import { useCreateOrderMutation } from "../redux/services/order.service";
+import {
+  useCreateOrderMutation,
+  useUploadImageMutation,
+} from "../redux/services/order.service";
 
 interface DeliveryOption {
   charge: number;
@@ -27,6 +31,7 @@ export default function CheckOut() {
     useState<DeliveryOption | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [createOrder, orderRes] = useCreateOrderMutation();
+  const [uploadImage, imageRes] = useUploadImageMutation();
 
   const { data, error, isLoading } = orderRes;
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -37,10 +42,10 @@ export default function CheckOut() {
     address: "",
     city: "",
     zipCode: "",
-    brand: "",
-    model: "",
     paymentMethod: "cash",
   });
+
+  console.log("cartItems", cartItems);
 
   useEffect(() => {
     const total = cartItems.reduce((sum, item) => {
@@ -77,31 +82,71 @@ export default function CheckOut() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
     if (!selectedDelivery) {
       alert("Please select a delivery option");
       return;
     }
 
     try {
-      const cartItem = cartItems.map((item) => ({
-        name: item.name,
-        price: item.price,
-        image: item.image,
-        type: item.type,
-        quantity: item.quantity,
-      }));
+      // Assuming this is from your mutation hook
+      const cartItemPromises = cartItems.map(async (item) => {
+        if (item.file) {
+          try {
+            console.log("item.file", item.file);
+            const imageData = new FormData();
+            imageData.append("file", item.file);
+            await uploadImage(imageData); // unwrap throws on failure
+            console.log("imageRes", imageRes.data, imageRes.error);
+            if(imageRes.data){
+              return {
+                name: item.name,
+                price: item.price,
+                image: imageRes.data.url,
+                type: item.type,
+                quantity: item.quantity,
+                brand: item.brand,
+                mobile: item.mobile,
+              };
+            }
+            if(imageRes.error){
+              throw new Error("Image upload failed for one or more items.");
+            }
+            return null;
+          } catch (err: any) {
+            throw new Error("Image upload failed for one or more items.");
+          }
+        } else {
+          return {
+            name: item.name,
+            price: item.price,
+            image: item.image,
+            type: item.type,
+            quantity: item.quantity,
+            brand: item.brand,
+            mobile: item.mobile,
+          };
+        }
+      });
+
+      const cartItem = await Promise.all(cartItemPromises);
+
+      if(cartItem.includes(null)){
+        throw new Error("Image upload failed for one or more items.");
+      }
+
       const body = {
-        items: cartItem,
-        subtotal,
-        deliveryCharge: selectedDelivery,
-        totalPrice,
         ...formData,
+        items: cartItem,
+        deliveryCharge: selectedDelivery.charge,
+        subtotal,
+        totalPrice,
       };
-      console.log("body", body);
-      await createOrder(body);
-    } catch (error) {
+
+      await createOrder(body); // assumes createOrder is also from RTK Query
+    } catch (error: any) {
       console.error("Error placing order:", error);
-      alert("An error occurred. Please try again.");
+      alert("Order failed: " + error.message);
     }
   };
 
@@ -111,23 +156,22 @@ export default function CheckOut() {
   };
 
   useEffect(() => {
-    
-  if (data) {
-    // Show success popup
-    setShowSuccessPopup(true);
-    clearCart(); // Clear the cart after successful order
-  }
-  if (error || isLoading) {
-    if (error && "data" in error) {
-      const errData = error.data as { message: string }; // 👈 define the structure
-      alert(errData.message);
-      console.log("error", error);
-    } else {
-      alert("something went wrong");
+    if (data) {
+      // Show success popup
+      setShowSuccessPopup(true);
+      clearCart(); // Clear the cart after successful order
     }
-  }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  },[data, error]);
+    if (error) {
+      if (error && "data" in error) {
+        const errData = error.data as { message: string }; // 👈 define the structure
+        alert(errData.message);
+        console.log("error", error);
+      } else {
+        alert("something went wrong");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data, error]);
 
   return (
     <div className="">
@@ -202,42 +246,6 @@ export default function CheckOut() {
                     id="phone"
                     name="phone"
                     value={formData.phone}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="brand"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Mobile Brand
-                  </label>
-                  <input
-                    type="tel"
-                    id="brand"
-                    name="brand"
-                    value={formData.brand}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  />
-                </div>
-
-                <div>
-                  <label
-                    htmlFor="model"
-                    className="block text-sm font-medium text-gray-700 mb-1"
-                  >
-                    Mobile Model
-                  </label>
-                  <input
-                    type="tel"
-                    id="model"
-                    name="model"
-                    value={formData.model}
                     onChange={handleInputChange}
                     required
                     className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"

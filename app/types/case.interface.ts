@@ -7,4 +7,7 @@ export type TCartItem = {
     image: string;
     slug: string;
     type: string;
+    mobile?: string;
+    brand?: string;
+    file?: File;
   };
