@@ -12,7 +12,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('adminToken');
+    const token = sessionStorage.getItem('adminToken');
     if (!token && pathname !== '/admin/login') {
       router.push('/admin/login');
     } else if (token) {
@@ -33,8 +33,6 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/products', label: 'Products', icon: <Package size={18} /> },
     { href: '/admin/orders', label: 'Orders', icon: <ShoppingCart size={18} /> },
     { href: '/admin/allproduct', label: 'All Product', icon: <Boxes size={18} /> },
-    { href: '/admin/updatepage', label: 'Update', icon: <Pencil size={18} /> },
-    { href: '/admin/massage', label: 'Massage', icon: <MessageCircleMore size={18}/> },
   ];
 
   return (
