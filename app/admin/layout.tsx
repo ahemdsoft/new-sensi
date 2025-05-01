@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
 import Link from 'next/link';
-import { Menu, X, LogOut, LayoutDashboard, Package, ShoppingCart, Boxes,MessageCircleMore ,Pencil } from 'lucide-react';
+import { Menu, X, LogOut, LayoutDashboard, Package, ShoppingCart, Boxes } from 'lucide-react';
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter();
@@ -24,7 +24,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   if (!isAuthenticated) return null;
 
   const handleLogout = () => {
-    localStorage.removeItem('adminToken');
+    sessionStorage.removeItem('adminToken');
     router.push('/admin/login');
   };
 

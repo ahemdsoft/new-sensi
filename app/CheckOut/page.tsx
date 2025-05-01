@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -9,6 +11,7 @@ import { useCart } from "../context/CartContext";
 import { FiTrash2 } from "react-icons/fi";
 import {
   useCreateOrderMutation,
+  useSentCodeMutation,
   useUploadImageMutation,
 } from "../redux/services/order.service";
 
@@ -23,18 +26,32 @@ const Deliverycharge: DeliveryOption[] = [
   { charge: 100, name: "Near Dhaka" },
 ];
 
+function formatPhoneNumber(phone: string): string {
+  // Assuming input is 11-digit local BD number like 01521701234
+  if (phone.startsWith('0')) {
+    return '+880' + phone.slice(1);
+  }
+  return phone; // already formatted
+}
+
+
 export default function CheckOut() {
+  const [sentCode, sentCodeRes] = useSentCodeMutation();
   const router = useRouter();
   const { cartItems, clearCart, removeFromCart } = useCart();
   const [subtotal, setSubtotal] = useState(0);
-  const [selectedDelivery, setSelectedDelivery] =
-    useState<DeliveryOption | null>(null);
+  const [selectedDelivery, setSelectedDelivery] = useState<DeliveryOption | null>(null);
   const [totalPrice, setTotalPrice] = useState(0);
   const [createOrder, orderRes] = useCreateOrderMutation();
   const [uploadImage, imageRes] = useUploadImageMutation();
 
   const { data, error, isLoading } = orderRes;
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
+  const [showCodeModal, setShowCodeModal] = useState(false);
+  const [verificationCode, setVerificationCode] = useState("");
+  const [orderData, setOrderData] = useState<any>(null);
+  const [isSendingCode, setIsSendingCode] = useState(false);
+
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -44,8 +61,6 @@ export default function CheckOut() {
     zipCode: "",
     paymentMethod: "cash",
   });
-
-  console.log("cartItems", cartItems);
 
   useEffect(() => {
     const total = cartItems.reduce((sum, item) => {
@@ -65,9 +80,7 @@ export default function CheckOut() {
   };
 
   const handleInputChange = (
-    e: React.ChangeEvent<
-      HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
-    >
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({
@@ -80,6 +93,52 @@ export default function CheckOut() {
     removeFromCart(itemId);
   };
 
+  const prepareOrderData = async () => {
+    const cartItemPromises = cartItems.map(async (item) => {
+      if (item.file) {
+        try {
+          const imageData = new FormData();
+          imageData.append("file", item.file);
+          const res = await uploadImage(imageData).unwrap();
+          return {
+            name: item.name,
+            price: item.price,
+            image: res.url,
+            type: item.type,
+            quantity: item.quantity,
+            brand: item.brand,
+            mobile: item.mobile,
+          };
+        } catch (err: any) {
+          throw new Error("Image upload failed for one or more items.");
+        }
+      } else {
+        return {
+          name: item.name,
+          price: item.price,
+          image: item.image,
+          type: item.type,
+          quantity: item.quantity,
+          brand: item.brand,
+          mobile: item.mobile,
+        };
+      }
+    });
+
+    const cartItem = await Promise.all(cartItemPromises);
+
+    const userId = localStorage.getItem("userId");
+    return {
+      ...formData,
+      items: cartItem,
+      deliveryCharge: selectedDelivery?.charge || 0,
+      subtotal,
+      totalPrice,
+      userId,
+      verificationCode,
+    };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -88,65 +147,57 @@ export default function CheckOut() {
       return;
     }
 
+    if (!formData.phone) {
+      alert("Phone number is required for verification");
+      return;
+    }
+
     try {
-      // Assuming this is from your mutation hook
-      const cartItemPromises = cartItems.map(async (item) => {
-        if (item.file) {
-          try {
-            console.log("item.file", item.file);
-            const imageData = new FormData();
-            imageData.append("file", item.file);
-            await uploadImage(imageData); // unwrap throws on failure
-            console.log("imageRes", imageRes.data, imageRes.error);
-            if(imageRes.data){
-              return {
-                name: item.name,
-                price: item.price,
-                image: imageRes.data.url,
-                type: item.type,
-                quantity: item.quantity,
-                brand: item.brand,
-                mobile: item.mobile,
-              };
-            }
-            if(imageRes.error){
-              throw new Error("Image upload failed for one or more items.");
-            }
-            return null;
-          } catch (err: any) {
-            throw new Error("Image upload failed for one or more items.");
-          }
-        } else {
-          return {
-            name: item.name,
-            price: item.price,
-            image: item.image,
-            type: item.type,
-            quantity: item.quantity,
-            brand: item.brand,
-            mobile: item.mobile,
-          };
-        }
-      });
+      setIsSendingCode(true);
+      // First send the verification code
+      const formatePhone = formatPhoneNumber(formData.phone);
+      await sentCode({ phone: formatePhone }).unwrap();
 
-      const cartItem = await Promise.all(cartItemPromises);
+      // Prepare order data but don't submit yet
+      const preparedOrderData = await prepareOrderData();
+      setOrderData(preparedOrderData);
 
-      if(cartItem.includes(null)){
-        throw new Error("Image upload failed for one or more items.");
+      // Show the verification modal
+      setShowCodeModal(true);
+    } catch (error: any) {
+      console.error("Error sending verification code:", error);
+      alert("Failed to send verification code: " + (error.data?.message || error.message));
+    } finally {
+      setIsSendingCode(false);
+    }
+  };
+
+  const handleVerifyCode = async () => {
+    if (!verificationCode) {
+      alert("Please enter the verification code");
+      return;
+    }
+
+    try {
+      if (!orderData) {
+        throw new Error("Order data is missing");
       }
 
-      const body = {
-        ...formData,
-        items: cartItem,
-        deliveryCharge: selectedDelivery.charge,
-        subtotal,
-        totalPrice,
+      // Add the verification code to the order data
+      const orderWithCode = {
+        ...orderData,
+        code: verificationCode,
       };
 
-      await createOrder(body); // assumes createOrder is also from RTK Query
+      await createOrder(orderWithCode).unwrap();
+
+      // On success, close the code modal and show success popup
+      setShowCodeModal(false);
+      setShowSuccessPopup(true);
+      clearCart();
     } catch (error: any) {
-      console.error("Error placing order:", error);
-      alert("Order failed: " + error.message);
+      console.error("Error verifying code or placing order:", error);
+      alert("Order failed: " + (error.data?.message || error.message));
     }
   };
 
@@ -157,20 +208,17 @@ export default function CheckOut() {
 
   useEffect(() => {
     if (data) {
-      // Show success popup
       setShowSuccessPopup(true);
-      clearCart(); // Clear the cart after successful order
+      clearCart();
     }
     if (error) {
       if (error && "data" in error) {
-        const errData = error.data as { message: string }; // 👈 define the structure
+        const errData = error.data as { message: string };
         alert(errData.message);
-        console.log("error", error);
       } else {
-        alert("something went wrong");
+        alert("Something went wrong");
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data, error]);
 
   return (
@@ -193,9 +241,7 @@ export default function CheckOut() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Checkout Form */}
             <div className="bg-white p-6 rounded-lg shadow-md">
-              <h2 className="text-xl font-semibold mb-4">
-                Shipping Information
-              </h2>
+              <h2 className="text-xl font-semibold mb-4">Shipping Information</h2>
 
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div>
@@ -294,7 +340,7 @@ export default function CheckOut() {
                       htmlFor="zipCode"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Discount Cupon
+                      Discount Coupon
                     </label>
                     <input
                       type="text"
@@ -328,8 +374,9 @@ export default function CheckOut() {
                 <button
                   type="submit"
                   className="w-full bg-[#3C1630] text-white font-bold py-3 rounded-full shadow hover:shadow-[0_4px_10px_#BF00FFA3] transition duration-200"
+                  disabled={isSendingCode}
                 >
-                  Place Order
+                  {isSendingCode ? "Sending Code..." : "Place Order"}
                 </button>
               </form>
             </div>
@@ -415,6 +462,75 @@ export default function CheckOut() {
         )}
       </div>
 
+      {/* Verification Code Modal */}
+      {showCodeModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-bold">Verify Your Order</h3>
+              <button
+                onClick={() => setShowCodeModal(false)}
+                className="text-gray-500 hover:text-gray-700"
+              >
+                <svg
+                  className="w-6 h-6"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            <div className="mb-4">
+              <p className="text-gray-600 mb-4">
+                We've sent a verification code to your phone number. Please enter it below to confirm your order.
+              </p>
+              <div>
+                <label
+                  htmlFor="verificationCode"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Verification Code
+                </label>
+                <input
+                  type="text"
+                  id="verificationCode"
+                  name="verificationCode"
+                  value={verificationCode}
+                  onChange={(e) => setVerificationCode(e.target.value)}
+                  required
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  placeholder="Enter 6-digit code"
+                />
+              </div>
+            </div>
+
+            <div className="flex justify-end space-x-3">
+              <button
+                onClick={() => setShowCodeModal(false)}
+                className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleVerifyCode}
+                className="px-4 py-2 bg-[#3C1630] text-white rounded-md hover:bg-[#4a1a3d]"
+                disabled={isLoading}
+              >
+                {isLoading ? "Verifying..." : "Verify & Place Order"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Success Popup */}
       {showSuccessPopup && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
@@ -477,11 +593,10 @@ export default function CheckOut() {
 
             <div className="text-center">
               <p className="text-sm text-gray-500 mb-4">
-                Thank you for your order! We&apos;ll send you a confirmation
+                Thank you for your order! We'll send you a confirmation
                 email shortly.
               </p>
               <button
-                disabled={isLoading}
                 onClick={closeSuccessPopup}
                 className="bg-[#3C1630] text-white font-bold py-2 px-6 rounded-full shadow hover:shadow-[0_4px_10px_#BF00FFA3] transition duration-200"
               >

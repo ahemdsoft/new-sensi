@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAdminLoginMutation } from "@/app/redux/services/auth.service";
 
@@ -11,12 +11,15 @@ export default function AdminLogin() {
   const router = useRouter();
   const [adminLogin, adminLoginData] = useAdminLoginMutation();
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin =async (e: React.FormEvent) => {
     e.preventDefault();
 
-    adminLogin({ email: username, password });
+    await adminLogin({ email: username, password });
+  };
+
+  useEffect(() => {
     const { data, error, isLoading } = adminLoginData;
-    if (error || isLoading) {
+    if (error && !isLoading) {
       if (error && "data" in error) {
         const errData = error.data as { message: string }; // 👈 define the structure
         setError(errData.message);
@@ -29,7 +32,8 @@ export default function AdminLogin() {
       sessionStorage.setItem("adminToken", data.accessToken);
       router.push("/admin/dashboard");
     }
-  };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  },[adminLoginData]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500">

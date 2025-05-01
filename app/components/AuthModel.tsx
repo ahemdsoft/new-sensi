@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-// import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useLoginMutation, useRegisterMutation } from "../redux/services/auth.service";
 
 interface AuthModalProps {
@@ -11,7 +11,7 @@ interface AuthModalProps {
 }
 
 export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
-  // const router = useRouter();
+  const router = useRouter();
   const [authMode, setAuthMode] = useState(mode);
   const [errors, setErrors] = useState("");
   const [formData, setFormData] = useState({
@@ -36,13 +36,13 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           password: formData.password,
           fullName: formData.name,
         };
-        register(body);
+        await register(body);
 
         if (data) {
           console.log("data", data);
-          sessionStorage.setItem("token", data.token);
-          localStorage.setItem("accountName", data.name);
-          // router.push("/dashboard");
+          localStorage.setItem("token", data.token);
+          localStorage.setItem("userId", data.user.id);
+          router.push("/user");
         }
         if (error) {
           if (error && "data" in error) {
@@ -59,13 +59,14 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
           password: formData.password,
         }
 
-        login(body);
+        await login(body);
         const {data, error} = loginData;
 
         if (data) {
           console.log("data", data);
-          sessionStorage.setItem("token", data.accessToken);
-          // router.push("/dashboard");
+          localStorage.setItem("accessToken", data.accessToken);
+          localStorage.setItem("userId", data.user.id)
+          router.push("/user");
         }
         if (error) {
           if (error && "data" in error) {

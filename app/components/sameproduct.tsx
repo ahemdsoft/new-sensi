@@ -1,27 +1,38 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CaseCard from "@/app/components/cart2";
+import { TCartItem } from "../types/case.interface";
+import { useFindAllCaseQuery } from "../redux/services/case.service";
 
 const ITEMS_PER_PAGE = 4;
 
-const caseCategories = [
-  { name: 'ANIME DESIGN', slug: 'anime', image: '/images/design/anime.jpg' },
-  { name: 'MARVEL/DC DESIGN', slug: 'marvel-dc', image: '/images/design/marvel-dc.jpg' },
-  { name: 'CARS & BIKES DESIGN', slug: 'cars-bikes', image: '/images/design/cars-bikes.jpg' },
-  { name: 'COUPLE DESIGN', slug: 'couple', image: '/images/design/couple.jpg' },
-  { name: 'FOOTBALL DESIGN', slug: 'football', image: '/images/design/football.jpg' },
-  { name: 'TYPOGRAPHY DESIGN', slug: 'typography', image: '/images/design/typography.jpg' },
-  { name: 'GAMING DESIGN', slug: 'gaming', image: '/images/design/gaming.jpg' },
-  { name: 'ISLAMIC DESIGN', slug: 'islamic', image: '/images/design/islamic.jpg' },
-  { name: 'LADIES DESIGN', slug: 'ladies', image: '/images/design/ladies.jpg' },
-  { name: 'K-POP DESIGN', slug: 'k-pop', image: '/images/design/k-pop.jpg' },
-];
-
-export default function Sameproduct() {
+export default function Sameproduct({type, id}: {type: string, id: string}) {
+  const [caseCategories, setCaseCategories] = useState<TCartItem[]>([]);
+  const {data, error, isLoading} = useFindAllCaseQuery({type});
   const [page, setPage] = useState(0);
   const totalPages = Math.ceil(caseCategories.length / ITEMS_PER_PAGE);
   const start = page * ITEMS_PER_PAGE;
   const visibleItems = caseCategories.slice(start, start + ITEMS_PER_PAGE);
+
+  useEffect(() => {
+    if (data) {
+      const datas = data.filter((item: TCartItem) => item.id !== id);
+      setCaseCategories(datas);
+    }
+    if (error) {
+      if ("data" in error) {
+        const errData = error.data as { message: string };
+        alert(errData.message);
+        console.log("error", error);
+      } else {
+        alert("Something went wrong");
+      }
+    }
+  }, [data, error, isLoading]);
+
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className='w-full h-full flex flex-col gap-12 mb-8 justify-evenly items-center'>
