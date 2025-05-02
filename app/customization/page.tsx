@@ -239,7 +239,7 @@ export default function Customization() {
         </div>
 
         <div className="mt-10 w-full max-w-6xl">
-          <Sameproduct />
+          <Sameproduct type={selectedType} />
         </div>
       </div>
     </FadeIn>

@@ -40,7 +40,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
 
         if (data) {
           console.log("data", data);
-          localStorage.setItem("token", data.token);
+          localStorage.setItem("accessToken", data.accessToken);
           localStorage.setItem("userId", data.user.id);
           router.push("/user");
         }
