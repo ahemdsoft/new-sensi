@@ -6,7 +6,7 @@ import { useFindAllCaseQuery } from "../redux/services/case.service";
 
 const ITEMS_PER_PAGE = 4;
 
-export default function Sameproduct({type, id}: {type: string, id: string}) {
+export default function Sameproduct({type, id}: {type: string, id?: string}) {
   const [caseCategories, setCaseCategories] = useState<TCartItem[]>([]);
   const {data, error, isLoading} = useFindAllCaseQuery({type});
   const [page, setPage] = useState(0);

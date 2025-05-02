@@ -13,7 +13,10 @@ interface JwtPayload {
 }
 
 export default function OrdersPage() {
-  const userId = localStorage.getItem("userId") as string;
+  const [userId, setUserId] = useState("");
+  useEffect(() => {
+    setUserId(localStorage.getItem("userId") || "");
+  }, []);
   const {
     data: orders = [],
     error,
