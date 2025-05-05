@@ -59,7 +59,7 @@ export default function BuyNowPage() {
       name: product.name,
       price: product.discountPrice,
       image: product.image,
-      type: "product",
+      type: product.type,
       brand: selectedBrand,
       mobile: selectedModel,
       quantity: quantity,

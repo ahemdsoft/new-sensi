@@ -33,6 +33,9 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     { href: '/admin/products', label: 'Products', icon: <Package size={18} /> },
     { href: '/admin/orders', label: 'Orders', icon: <ShoppingCart size={18} /> },
     { href: '/admin/allproduct', label: 'All Product', icon: <Boxes size={18} /> },
+    { href: '/admin/device', label: 'Device', icon: <Boxes size={18} /> },
+
+    { href: '/admin/alldevices', label: 'All Devices', icon: <Boxes size={18} /> },
   ];
 
   return (
