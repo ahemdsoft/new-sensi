@@ -1,1 +1,1 @@
-export const mainUrl = "https://sensi-server.onrender.com";
+export const mainUrl = "http://localhost:5000";
