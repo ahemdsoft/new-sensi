@@ -81,7 +81,7 @@ export default function OrdersPage() {
   if (isLoading)
     return (
       <div className="flex min-h-screen bg-gray-50">
-        <aside className="w-64 bg-white shadow-xl p-6 h-full hidden md:block fixed">
+        <aside className="w-64 bg-white shadow-xl p-6 h-full hidden md:block relative">
           {/* Sidebar skeleton */}
           <div className="animate-pulse">
             <div className="h-8 bg-gray-200 rounded mb-4 w-3/4"></div>
@@ -105,7 +105,7 @@ export default function OrdersPage() {
   if (error)
     return (
       <div className="flex min-h-screen bg-gray-50">
-        <aside className="w-64 bg-white shadow-xl p-6 h-full hidden md:block fixed">
+        <aside className="w-64 bg-white shadow-xl p-6 h-[100%] hidden md:block absolute ">
           <h2 className="text-xl font-bold text-gray-800 mb-4">User Info</h2>
           <p className="text-gray-600 break-words mb-6">{userEmail}</p>
           <button
@@ -126,7 +126,7 @@ export default function OrdersPage() {
   return (
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-xl p-6 h-full hidden md:block fixed">
+      <aside className=" relative w-64 bg-white shadow-xl p-6 h-full hidden md:block ">
         <h2 className="text-xl font-bold text-gray-800 mb-4">User Info</h2>
         <p className="text-gray-600 break-words mb-6">{userEmail}</p>
         <button
