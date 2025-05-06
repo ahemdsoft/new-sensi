@@ -1,18 +1,19 @@
 "use client";
-import { useParams, useRouter } from "next/navigation";
+// import { useParams, useRouter } from "next/navigation";
 import CaseCard3 from "@/app/components/cart3";
-import { useCart } from "@/app/context/CartContext";
+// import { useCart } from "@/app/context/CartContext";
 import { TCartItem } from "@/app/types/case.interface";
 import {
   useSearchCaseQuery,
 } from "@/app/redux/services/case.service";
+import { useParams } from "next/navigation";
 
 // Dummy JSON data
 export default function PhoneCasesPage() {
   const params = useParams();
-  const router = useRouter();
+  // const router = useRouter();
   const { query } = params;
-  const { addToCart } = useCart();
+  // const { addToCart } = useCart();
 
   const { data, error, isLoading } = useSearchCaseQuery(query as string);
   if (error) {
@@ -44,19 +45,19 @@ export default function PhoneCasesPage() {
   const caseCategories: TCartItem[] = data ? (data as TCartItem[]) : [];
   console.log(data);
 
-  const handleBuyNow = (item: TCartItem) => {
-    const cartItem = {
-      id: item.id,
-      name: item.name,
-      price: item.discountPrice as number,
-      image: item.image,
-      type: item.type as string,
-      quantity: 1,
-    };
+  // const handleBuyNow = (item: TCartItem) => {
+  //   const cartItem = {
+  //     id: item.id,
+  //     name: item.name,
+  //     price: item.discountPrice as number,
+  //     image: item.image,
+  //     type: item.type as string,
+  //     quantity: 1,
+  //   };
 
-    addToCart(cartItem);
-    router.push("/buy/" + item.id);
-  };
+  //   addToCart(cartItem);
+  //   router.push("/buy/" + item.id);
+  // };
   // console.log(caseCategories);
   return (
     <div className="p-4 flex flex-col items-center justify-center min-h-screen bg-[#ffffff]">
@@ -84,12 +85,13 @@ export default function PhoneCasesPage() {
               >
                 {1 <= item.stock ? (
                   <CaseCard3
+                    id={item.id}
                     image={item.image}
                     name={item.name}
                     price={item.price as number}
                     discountPrice={item.discountPrice as number}
                     href={href}
-                    onBuyNow={() => handleBuyNow(item)}
+                    // onBuyNow={() => handleBuyNow(item)}
                     quantity={1}
                   />
                 ) : null}
