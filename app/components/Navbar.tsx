@@ -224,23 +224,7 @@ export default function Navbar() {
           {item.name}
         </Link>
       );
-    })}<FadeIn delay={0.3}>
-    <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-start px-6 py-4 space-y-2 md:hidden z-50">
-      <div className="w-full mb-4">
-        <div className="flex items-center space-x-2">
-          <MagnifyingGlassIcon className="h-5 w-5 text-white" />
-          <input
-            type="text"
-            placeholder="Search products..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyDown={handleSearchKeyPress}
-            className="w-full bg-gray-700 text-white px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-          />
-        </div>
-      </div>
-    </div>
-  </FadeIn>
+    })}
   </div>
 )}
 

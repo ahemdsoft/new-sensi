@@ -51,7 +51,7 @@ const Footer = () => {
               <h3 className="text-lg font-semibold"><Link href={'/contact-us'}>Contact Us</Link></h3>
               <div className="flex flex-col space-y-2">
                 <a 
-                  href="https://facebook.com/senshiphonecasings" 
+                  href="https://www.facebook.com/senshiphonecasings" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="flex items-center space-x-2 hover:text-gray-300 transition-colors"
@@ -60,7 +60,7 @@ const Footer = () => {
                   <span>Facebook Page</span>
                 </a>
                 <a 
-                  href="https://instagram.com/senshiphonecasings" 
+                  href="https://www.instagram.com/senshi_phone_casings?igsh=eGpidjE5NGtldjJw" 
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className="flex items-center space-x-2 hover:text-gray-300 transition-colors"
@@ -69,7 +69,7 @@ const Footer = () => {
                   <span>Instagram</span>
                 </a>
                 <a 
-                  href="tel:+8801234567890" 
+                  href="tel:+88 09638-612711" 
                   className="flex items-center space-x-2 hover:text-gray-300 transition-colors"
                 >
                   <FaPhone size={20} />

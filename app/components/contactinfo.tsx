@@ -13,14 +13,23 @@ export default function ContactInfo() {
           <a href="tel:+8801894053387" className="w-9 h-9  text-black rounded-full flex items-center justify-center">
             <Image src="/call.png" alt="phone" width={20} height={20} />
           </a>
-          <span>+880 1894-053387</span>
+          <span>+88 09638-612711</span>
         </div>
 
         <div className="flex items-center space-x-4">
           <a href="mailto:senshiphonecasings.com" className="w-9 h-9  text-black rounded-full flex items-center justify-center">
             <Image src="/ic_sharp-email.png" alt="email" width={20} height={20} />
           </a>
-          <span>senshiphonecasings.com</span>
+          <span>
+  <a
+    href="https://mail.google.com/mail/?view=cm&fs=1&to=senshicasings@gmail.com"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    senshicasings@gmail.com
+  </a>
+</span>
+
         </div>
 
         <div className="flex items-center space-x-4">
@@ -32,10 +41,10 @@ export default function ContactInfo() {
       </div>
 
       <div className="flex space-x-4 mt-10 ">
-        <a href="https://www.facebook.com/profile.php" className="w-8 h-8 text-black rounded-full flex items-center justify-center">
+        <a href="https://www.facebook.com/senshiphonecasings" className="w-8 h-8 text-black rounded-full flex items-center justify-center">
           <Image src="/facebook.png" alt="email" width={30} height={30} />
         </a>
-        <a href="https://www.instagram.com/senshi_phone_casings/" className="w-8 h-8  text-black rounded-full flex items-center justify-center">
+        <a href="https://www.instagram.com/senshi_phone_casings?igsh=eGpidjE5NGtldjJw" className="w-8 h-8  text-black rounded-full flex items-center justify-center">
         <Image src="/insta.png" alt="email" width={30} height={30} />
         </a>
         <a href="https://wwww.tiktok.com/" className="w-8 h-8 text-black rounded-full flex items-center justify-center">
