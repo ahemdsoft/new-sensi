@@ -1,11 +1,13 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, FormEvent } from 'react';
+import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import axios from 'axios';
 import { MagnifyingGlassIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import CartOption from './cartOptions';
+import FadeIn from './animation/fadein';
+
 const navItems = [
   { name: 'HOME', href: '/' },
   { name: 'PHONE CASES', href: '/phone-cases' },
@@ -24,36 +26,25 @@ const phoneCaseItems = [
 ];
 
 export default function Navbar() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [isSearching, setIsSearching] = useState(false);
   const [phoneCasesOpen, setPhoneCasesOpen] = useState(false);
 
-  // ✅ Use isSearching to avoid lint warning
-  useEffect(() => {
-    console.log('Searching status:', isSearching);
-  }, [isSearching]);
-  const handleSearch = async () => {
+  const handleSearchSubmit = (e: FormEvent) => {
+    e.preventDefault();
     if (!searchQuery.trim()) return;
     
-    try {
-      setIsSearching(true);
-      window.location.href = `/desgine-collection/${searchQuery}`;
-      const response = await axios.get(''); // Add real endpoint
-      console.log('Search response:', response.data);
-    } catch (error) {
-      console.error('Search error:', error);
-    } finally {
-      setIsSearching(false);
-      setSearchQuery('');
-      setSearchOpen(false);
-    }
+    // Navigate to search results page with query parameter
+    router.push(`/search/${searchQuery}`);
+    setSearchQuery('');
+    setSearchOpen(false);
   };
 
   const handleSearchKeyPress = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter') {
-      handleSearch();
+      handleSearchSubmit(e);
     }
   };
 
@@ -77,30 +68,29 @@ export default function Navbar() {
             </button>
 
             <div className="hidden md:flex items-center relative">
-  <button
-    onClick={() => setSearchOpen(!searchOpen)}
-    className="p-2 hover:bg-gray-600 rounded-full cursor-pointer transition-colors"
-  >
-    <MagnifyingGlassIcon className="h-6 w-6 text-white" />
-  </button>
+              <button
+                onClick={() => setSearchOpen(!searchOpen)}
+                className="p-2 hover:bg-gray-600 rounded-full cursor-pointer transition-colors"
+              >
+                <MagnifyingGlassIcon className="h-6 w-6 text-white" />
+              </button>
 
-  <div
-    className={`absolute left-12 transition-all duration-300 ease-in-out ${
-      searchOpen ? 'opacity-100 scale-100 w-64' : 'opacity-0 scale-95 w-0'
-    } overflow-hidden`}
-  >
-    <input
-      type="text"
-      placeholder="Search products..."
-      value={searchQuery}
-      
-      onChange={(e) => setSearchQuery(e.target.value)}
-      onKeyDown={handleSearchKeyPress}
-      className="p-2 pl-4 pr-4 border border-gray-800 rounded-xl shadow-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-600 text-sm transition-all"
-    />
-  </div>
-</div>
-
+              <form
+                onSubmit={handleSearchSubmit}
+                className={`absolute left-12 transition-all duration-300 ease-in-out ${
+                  searchOpen ? 'opacity-100 scale-100 w-64' : 'opacity-0 scale-95 w-0'
+                } overflow-hidden`}
+              >
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyPress}
+                  className="p-2 pl-4 pr-4 border border-gray-800 rounded-xl shadow-sm w-full focus:outline-none focus:ring-2 focus:ring-blue-400 bg-gray-600 text-sm transition-all"
+                />
+              </form>
+            </div>
           </div>
 
           <Link href="/" className="flex-shrink-0">
@@ -146,7 +136,6 @@ export default function Navbar() {
                           </Link>
                         </li>
                       ))}
-                      
                     </ul>
                   </div>
                 </div>
@@ -165,68 +154,70 @@ export default function Navbar() {
           })}
         </div>
         {menuOpen && (
-  <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-start px-6 py-4 space-y-2 md:hidden z-50">
-
-    {/* 🔍 Mobile Search */}
-    <div className="w-full mb-4">
-      <div className="flex items-center space-x-2">
-        <MagnifyingGlassIcon className="h-5 w-5 text-white" />
-        <input
-          type="text"
-          placeholder="Search products..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          onKeyDown={handleSearchKeyPress}
-          className="w-full bg-gray-700 text-white px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
-        />
-      </div>
-    </div>
-
-
-    {/* Mobile Navigation Items */}
-    {navItems.map((item) => {
-      if (item.name === 'PHONE CASES') {
-        return (
-          <div key={item.href} className="w-full">
-            <button 
-              onClick={togglePhoneCases}
-              className="w-full py-2 border-b border-gray-700 flex  m-1 justify-between cursor-pointer items-center"
-            >
-              {item.name}
-              <ChevronDownIcon className={`w-4 h-4 transition-transform ${phoneCasesOpen ? 'rotate-180' : ''}`} />
-            </button>
-            {phoneCasesOpen && (
-              <div className="pl-4 py-2 m-1 space-y-2">
-                {phoneCaseItems.map((subItem) => (
-                  <Link 
-                    key={subItem.href} 
-                    href={subItem.href} 
-                    className="block py-2 border-b border-gray-700"
-                    onClick={() => setMenuOpen(false)}
-                  >
-                    {subItem.name}
-                  </Link>
-                ))}
+          <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-start px-6 py-4 space-y-2 md:hidden z-50">
+            {/* Mobile Search */}
+            <form onSubmit={handleSearchSubmit} className="w-full mb-4">
+              <div className="flex items-center space-x-2">
+                <MagnifyingGlassIcon className="h-5 w-5 text-white" />
+                <input
+                  type="text"
+                  placeholder="Search products..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onKeyDown={handleSearchKeyPress}
+                  className="w-full bg-gray-700 text-white px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+                />
               </div>
-            )}
+            </form>
+
+            {/* Mobile Navigation Items */}
+            {navItems.map((item) => {
+              if (item.name === 'PHONE CASES') {
+                return (
+                  <div key={item.href} className="w-full">
+                    <button 
+                      onClick={togglePhoneCases}
+                      className="w-full py-2 border-b border-gray-700 flex z-20 m-1 justify-between cursor-pointer items-center"
+                    >
+                      {item.name}
+                      <ChevronDownIcon className={`w-4 h-4 transition-transform ${phoneCasesOpen ? 'rotate-180' : ''}`} />
+                    </button>
+                    {phoneCasesOpen && (
+                      <div className="pl-4 py-2 m-1 space-y-2">
+                        {phoneCaseItems.map((subItem) => (
+                          <Link 
+                            key={subItem.href} 
+                            href={subItem.href} 
+                            className="block py-2 border-b border-gray-700"
+                            onClick={() => setMenuOpen(false)}
+                          >
+                            {subItem.name}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              }
+
+              return (
+                <Link 
+                  key={item.href} 
+                  href={item.href} 
+                  className="w-full py-2 border-b border-gray-700"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {item.name}
+                </Link>
+              );
+            })}
+            <FadeIn delay={0.3}>
+              <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-start px-6 py-4 space-y-2 md:hidden z-50">
+                {/* mobile menu content here */}
+              </div>
+            </FadeIn>
           </div>
-        );
-      }
-
-      return (
-        <Link 
-          key={item.href} 
-          href={item.href} 
-          className="w-full py-2 border-b border-gray-700"
-          onClick={() => setMenuOpen(false)}
-        >
-          {item.name}
-        </Link>
-      );
-    })}
-  </div>
-)}
-
+        )}
       </nav>
     </div>
   );

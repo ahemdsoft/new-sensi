@@ -56,6 +56,11 @@ export const caseApi = createApi({
         method: "DELETE",
       }),
     }),
+    searchCase: build.query<any, string>({
+      query: (query) => ({
+        url: `search/${query}`,
+      }),
+    })
   }),
 });
 
@@ -65,4 +70,5 @@ export const {
   useFindOneCaseQuery,
   useUpdateCaseMutation,
   useDeleteCaseMutation,
+  useSearchCaseQuery
 } = caseApi;

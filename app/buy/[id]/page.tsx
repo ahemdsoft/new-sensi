@@ -9,13 +9,52 @@ import Fullslide from "@/app/components/animation/fullslide";
 import Sameproduct from "@/app/components/sameproduct";
 import { useFindOneCaseQuery } from "@/app/redux/services/case.service";
 import { TCartItem } from "@/app/types/case.interface";
+import { useFindAllDeviceQuery } from "@/app/redux/services/device.service";
+
+const BRAND_OPTIONS = [
+  { label: 'Apple', value: 'apple' },
+  { label: 'Samsung', value: 'samsung' },
+  { label: 'Xiaomi', value: 'xiaomi' },
+  { label: 'Redmi', value: 'redmi' },
+  { label: 'Oppo', value: 'oppo' },
+  { label: 'OnePlus', value: 'oneplus' },
+  { label: 'Vivo', value: 'vivo' },
+  { label: 'Realme', value: 'realme' },
+  { label: 'Google Pixel', value: 'googlepixel' },
+  { label: 'Tecno', value: 'tecno' },
+  { label: 'Motorola', value: 'motorola' },
+  { label: 'Poco', value: 'poco' },
+  { label: 'Huawei', value: 'huawei' },
+  { label: 'Nokia', value: 'nokia' },
+  { label: 'Honor', value: 'honor' }
+];
+
 export default function BuyNowPage() {
   const { id } = useParams();
   const router = useRouter();
   const { addToCart } = useCart();
-  console.log(id);
   const [product, setProduct] = useState<TCartItem>({} as TCartItem);
   const { data, error, isLoading } = useFindOneCaseQuery(id as string);
+  
+  const [quantity, setQuantity] = useState(1);
+  const [selectedBrand, setSelectedBrand] = useState("");
+  const [selectedModel, setSelectedModel] = useState("");
+
+  // Fetch models based on selected brand and case type
+  const { data: modelsData } = useFindAllDeviceQuery({
+    forCase: product.type,
+    brand: selectedBrand,
+  });
+
+  const [models, setModels] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (modelsData) {
+      const modelNames = modelsData.map((item: any) => item.model);
+      setModels(modelNames);
+    }
+  }, [modelsData]);
+
   useEffect(() => {
     if (data) {
       setProduct(data);
@@ -24,23 +63,11 @@ export default function BuyNowPage() {
       if ("data" in error) {
         const errData = error.data as { message: string };
         alert(errData.message);
-        console.log("error", error);
       } else {
         alert("Something went wrong");
       }
     }
   }, [data, error, isLoading]);
-
-  const brandModelMap: Record<string, string[]> = {
-    realme: ["Narzo 50", "C35", "Realme 8"],
-    xiaomi: ["Redmi Note 9", "Redmi 12", "Poco X3"],
-    samsung: ["Galaxy A13", "Galaxy M14", "Galaxy S21"],
-    infinix: ["Hot 11", "Zero X Pro", "Note 30"],
-  };
-
-  const [quantity, setQuantity] = useState(1);
-  const [selectedBrand, setSelectedBrand] = useState("");
-  const [selectedModel, setSelectedModel] = useState("");
 
   const handleBrandChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const brand = e.target.value;
@@ -157,9 +184,9 @@ export default function BuyNowPage() {
                 className="w-full border border-gray-300 rounded-md p-2 shadow-sm"
               >
                 <option value="">-- Select Brand --</option>
-                {Object.keys(brandModelMap).map((brand) => (
-                  <option key={brand} value={brand}>
-                    {brand}
+                {BRAND_OPTIONS.map((brand) => (
+                  <option key={brand.value} value={brand.value}>
+                    {brand.label}
                   </option>
                 ))}
               </select>
@@ -178,7 +205,7 @@ export default function BuyNowPage() {
               >
                 <option value="">-- Select Model --</option>
                 {selectedBrand &&
-                  brandModelMap[selectedBrand].map((model) => (
+                  models.map((model) => (
                     <option key={model} value={model}>
                       {model}
                     </option>

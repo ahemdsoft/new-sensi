@@ -3,6 +3,7 @@ import { authApi } from "./services/auth.service";
 import { caseApi } from "./services/case.service";
 import { orderApi } from "./services/order.service";
 import { deviceApi } from "./services/device.service";
+import { cuponApi } from "./services/cupon.service";
 // ...
 
 export const store = configureStore({
@@ -13,6 +14,7 @@ export const store = configureStore({
     [caseApi.reducerPath]: caseApi.reducer,
     [orderApi.reducerPath]: orderApi.reducer,
     [deviceApi.reducerPath]: deviceApi.reducer,
+    [cuponApi.reducerPath]: cuponApi.reducer
   },
 
   middleware: (getDefaultMiddleware) =>
@@ -20,7 +22,8 @@ export const store = configureStore({
       authApi.middleware,
       caseApi.middleware,
       orderApi.middleware,
-      deviceApi.middleware
+      deviceApi.middleware,
+      cuponApi.middleware
     ),
 });
 

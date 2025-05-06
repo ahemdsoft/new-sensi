@@ -1,18 +1,20 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import CaseCard3 from "@/app/components/cart3";
 import { useCart } from "@/app/context/CartContext";
 import { TCartItem } from "@/app/types/case.interface";
-import { useFindAllCaseQuery } from "@/app/redux/services/case.service";
+import {
+  useSearchCaseQuery,
+} from "@/app/redux/services/case.service";
 
 // Dummy JSON data
 export default function PhoneCasesPage() {
+  const params = useParams();
   const router = useRouter();
+  const { query } = params;
   const { addToCart } = useCart();
 
-  const { data, error, isLoading } = useFindAllCaseQuery({
-    type: "pop-holder",
-  });
+  const { data, error, isLoading } = useSearchCaseQuery(query as string);
   if (error) {
     if ("data" in error) {
       const errData = error.data as { message: string };
@@ -25,13 +27,22 @@ export default function PhoneCasesPage() {
   }
 
   if (isLoading) {
-    return <div className="h-[100%] absolute flex justify-center items-center">Loading...</div>;
+    return (
+      <div className="h-[100%] absolute flex justify-center items-center">
+        Loading...
+      </div>
+    );
   }
   if (!data) {
-    return <div className="h-[100%] absolute flex justify-center items-center">No data found</div>;
+    return (
+      <div className="h-[100%] absolute flex justify-center items-center">
+        No data found
+      </div>
+    );
   }
 
   const caseCategories: TCartItem[] = data ? (data as TCartItem[]) : [];
+  console.log(data);
 
   const handleBuyNow = (item: TCartItem) => {
     const cartItem = {
@@ -51,7 +62,7 @@ export default function PhoneCasesPage() {
     <div className="p-4 flex flex-col items-center justify-center min-h-screen bg-[#ffffff]">
       <div className="w-[90%] flex flex-col gap-11 justify-center items-center mb-5 mt-5 h-[100%]">
         <h1 className="text-6xl hover:shadow-[0px_4px_6px_#BF00FF78] font-bold md:w-[848px] md:h-[110] rounded-[15px] bg-[#3C1630] text-white w-full flex justify-center items-center">
-          POP HOLDER
+          {query} Related
         </h1>
         <h2 className="sm:text-4xl hover:shadow-[0px_4px_6px_#00D6EE40] text-white font-semibold md:w-[1143px] md:h-[68px] bg-[#3C1630] flex justify-center items-center w-full top-[221.25px] rounded-[15.75px]">
           96% COLOUR ACCURACY, GRAPHENE METAL, RUBBER GRIP
@@ -60,7 +71,7 @@ export default function PhoneCasesPage() {
         <div className="flex flex-wrap justify-center gap-24">
           {caseCategories.map((item, index) => {
             const href = `/buy/${item.id}`;
-            console.log(item)
+            console.log(item);
             return (
               <div
                 key={index}

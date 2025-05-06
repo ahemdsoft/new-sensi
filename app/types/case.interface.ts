@@ -11,3 +11,9 @@ export type TCartItem = {
     brand?: string;
     file?: File;
   };
+
+
+export type TCupon = {
+    code: string;
+    discount: number;
+  };

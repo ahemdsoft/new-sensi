@@ -46,7 +46,7 @@ export default function Sameproduct({type, id}: {type: string, id?: string}) {
               key={index}
               image={item.image}
               name={item.name}
-              href={`/desgine-collection/${item.slug}`}
+              href={`/phone-cases/${item.type}/${item.slug}`}
             />
           ))}
         </div>

@@ -27,9 +27,9 @@ export const deviceApi = createApi({
         body,
       }),
     }),
-    findAllDevice: build.query<any, any>({
-      query: () => ({
-        url: "",
+    findAllDevice: build.query<any, { forCase?: string; brand?: string }>({
+      query: ({forCase,brand}) => ({
+        url: `${forCase ? `?forCase=${forCase}` : ''}${brand ? `&brand=${brand}` : ''}`,
       }),
     }),
     findOneDevice: build.query<any, any>({
@@ -43,7 +43,7 @@ export const deviceApi = createApi({
         method: "PATCH",
         body,
       }),
-    })
+    }),
   }),
 });
 
@@ -53,5 +53,5 @@ export const {
   useCreateDeviceMutation,
   useFindAllDeviceQuery,
   useFindOneDeviceQuery,
-  useUpdateDeviceMutation
+  useUpdateDeviceMutation,
 } = deviceApi;
