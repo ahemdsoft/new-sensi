@@ -2,7 +2,6 @@
 
 import { Suspense } from "react";
 import VerifyEmail from "./components/VerifyEmail";
-import TypingAnimation from "@/components/ui/loadingAnimation";
 
 const Page = () => {
   return (
@@ -10,7 +9,6 @@ const Page = () => {
       <Suspense
         fallback={
           <div>
-            <TypingAnimation />
           </div>
         }
       >

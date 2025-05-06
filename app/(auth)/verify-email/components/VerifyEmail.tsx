@@ -1,8 +1,10 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import axiosInstance from "@/lib/axiosInstance";
 import { useRouter } from "next/navigation";
+import axiosInstance from "@/app/lib/axiosInstance";
 export default function VerifyEmail() {
   const [verificationStatus, setVerificationStatus] = useState<{
     message: string;
@@ -32,7 +34,7 @@ export default function VerifyEmail() {
             isSuccess: true,
           });
 
-          route.push("/sign-in");
+          route.push("/auth");
         } catch (error: any) {
           console.error(
             "Error verifying email:",
@@ -42,7 +44,7 @@ export default function VerifyEmail() {
             message: error.response?.data?.message || "Verification failed.",
             isSuccess: false,
           });
-          route.push("/sign-in");
+          route.push("/auth");
         }
       };
 
