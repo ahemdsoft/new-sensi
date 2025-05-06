@@ -66,7 +66,7 @@ export default function PhoneCaseTypePage() {
     <div className="p-4 flex flex-col items-center justify-center min-h-screen bg-[#f7edf7]">
       <div className="w-[65%] flex flex-col gap-11 justify-center items-center mb-5 mt-5 h-[100%]">
       <h1 className="text-xl sm:text-3xl md:text-6xl hover:shadow-[0px_4px_6px_#BF00FF78] font-bold w-full max-w-[848px] rounded-[15px] bg-[#3C1630] text-white flex justify-center items-center px-4 py-2 text-center">
-  {id} Cases
+  {id} CASES
 </h1>
 
 <h2 className="text-sm sm:text-xl md:text-4xl hover:shadow-[0px_4px_6px_#00D6EE40] text-white font-semibold w-full max-w-[1143px] bg-[#3C1630] flex justify-center items-center px-4 py-2 rounded-[15.75px] text-center">
