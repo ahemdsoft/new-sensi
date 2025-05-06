@@ -63,6 +63,7 @@ export default function PhoneCasesPage() {
                 >
                   {item.stock >= 1 && (
                     <CaseCard3
+                      id={item.id}
                       image={item.image}
                       name={item.name}
                       price={item.price as number}

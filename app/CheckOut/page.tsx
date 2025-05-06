@@ -14,6 +14,8 @@ import {
   useSentCodeMutation,
   useUploadImageMutation,
 } from "../redux/services/order.service";
+import { useGetAllCuponQuery } from "../redux/services/cupon.service";
+import { TCupon } from "../types/case.interface";
 
 interface DeliveryOption {
   charge: number;
@@ -34,9 +36,9 @@ function formatPhoneNumber(phone: string): string {
   return phone; // already formatted
 }
 
-
 export default function CheckOut() {
   const [sentCode, sentCodeRes] = useSentCodeMutation();
+  const cuponsRes = useGetAllCuponQuery();
   const router = useRouter();
   const { cartItems, clearCart, removeFromCart } = useCart();
   const [subtotal, setSubtotal] = useState(0);
@@ -44,6 +46,11 @@ export default function CheckOut() {
   const [totalPrice, setTotalPrice] = useState(0);
   const [createOrder, orderRes] = useCreateOrderMutation();
   const [uploadImage, imageRes] = useUploadImageMutation();
+  const [discount, setDiscount] = useState(0);
+  const [couponCode, setCouponCode] = useState("");
+  const [coupons, setCoupons] = useState<TCupon[]>([]);
+  const [couponMessage, setCouponMessage] = useState("");
+  const [isCouponApplied, setIsCouponApplied] = useState(false);
 
   const { data, error, isLoading } = orderRes;
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -51,6 +58,13 @@ export default function CheckOut() {
   const [verificationCode, setVerificationCode] = useState("");
   const [orderData, setOrderData] = useState<any>(null);
   const [isSendingCode, setIsSendingCode] = useState(false);
+
+  useEffect(() => {
+    if (cuponsRes.data) {
+      setCoupons(cuponsRes.data);
+    }
+  }, [cuponsRes]);
+  console.log("cupons", coupons);
 
   const [formData, setFormData] = useState({
     name: "",
@@ -72,8 +86,9 @@ export default function CheckOut() {
 
   useEffect(() => {
     const deliveryCharge = selectedDelivery ? selectedDelivery.charge : 0;
-    setTotalPrice(subtotal + deliveryCharge);
-  }, [subtotal, selectedDelivery]);
+    const discountedPrice = subtotal - discount;
+    setTotalPrice(Math.max(0, discountedPrice + deliveryCharge));
+  }, [subtotal, selectedDelivery, discount]);
 
   const handleDeliveryChange = (option: DeliveryOption) => {
     setSelectedDelivery(option);
@@ -91,6 +106,28 @@ export default function CheckOut() {
 
   const handleRemoveItem = (itemId: string) => {
     removeFromCart(itemId);
+  };
+
+  const applyCoupon = () => {
+    const coupon = coupons.find(c => c.code === couponCode);
+    console.log("coupon", coupon);
+    if (coupon) {
+      const discountAmount = coupon.discount;
+      setDiscount(discountAmount);
+      setCouponMessage(`Coupon applied: ${coupon.discount}% off`);
+      setIsCouponApplied(true);
+    } else {
+      setDiscount(0);
+      setCouponMessage("Invalid coupon code");
+      setIsCouponApplied(false);
+    }
+  };
+
+  const removeCoupon = () => {
+    setDiscount(0);
+    setCouponCode("");
+    setCouponMessage("");
+    setIsCouponApplied(false);
   };
 
   const prepareOrderData = async () => {
@@ -136,6 +173,8 @@ export default function CheckOut() {
       totalPrice,
       userId,
       verificationCode,
+      discount,
+      couponCode: isCouponApplied ? couponCode : null,
     };
   };
 
@@ -340,7 +379,7 @@ export default function CheckOut() {
                       htmlFor="zipCode"
                       className="block text-sm font-medium text-gray-700 mb-1"
                     >
-                      Discount Coupon
+                      ZIP Code
                     </label>
                     <input
                       type="text"
@@ -351,6 +390,44 @@ export default function CheckOut() {
                       className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Discount Coupon
+                  </label>
+                  <div className="flex gap-2">
+                    <input
+                      type="text"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                      placeholder="Enter coupon code"
+                      className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      disabled={isCouponApplied}
+                    />
+                    {isCouponApplied ? (
+                      <button
+                        type="button"
+                        onClick={removeCoupon}
+                        className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+                      >
+                        Remove
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={applyCoupon}
+                        className="bg-[#3C1630] text-white px-4 py-2 rounded-md hover:bg-[#4a1a3d]"
+                      >
+                        Apply
+                      </button>
+                    )}
+                  </div>
+                  {couponMessage && (
+                    <p className={`text-sm ${isCouponApplied ? 'text-green-600' : 'text-red-600'}`}>
+                      {couponMessage}
+                    </p>
+                  )}
                 </div>
 
                 <div>
@@ -444,6 +521,12 @@ export default function CheckOut() {
                   <span className="font-medium">Subtotal:</span>
                   <span>৳{subtotal.toFixed(2)}</span>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between mb-2 text-green-600">
+                    <span className="font-medium">Discount:</span>
+                    <span>-৳{discount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between mb-2">
                   <span className="font-medium">Shipping:</span>
                   <span>
@@ -570,6 +653,12 @@ export default function CheckOut() {
                   <span className="text-gray-600">Subtotal:</span>
                   <span className="font-medium">৳{subtotal.toFixed(2)}</span>
                 </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span className="text-gray-600">Discount:</span>
+                    <span className="font-medium">-৳{discount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="flex justify-between">
                   <span className="text-gray-600">Delivery:</span>
                   <span className="font-medium">
@@ -589,6 +678,9 @@ export default function CheckOut() {
               <p className="text-gray-700">{formData.address}</p>
               <p className="text-gray-700">{formData.city}</p>
               <p className="text-gray-700">Phone: {formData.phone}</p>
+              {isCouponApplied && (
+                <p className="text-gray-700">Coupon: {couponCode}</p>
+              )}
             </div>
 
             <div className="text-center">

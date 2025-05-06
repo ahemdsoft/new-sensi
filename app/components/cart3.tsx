@@ -5,9 +5,10 @@ import { FiShoppingBag } from "react-icons/fi";
 import { useParams } from "next/navigation";
 import { useCart } from "../context/CartContext";
 import FadeInOnScroll from "./animation/fadeinscrool";
-import Image from "next/image";
+// import Image from "next/image";
 
 export default function CaseCard3({
+  id,
   image,
   name,
   href,
@@ -15,6 +16,7 @@ export default function CaseCard3({
   discountPrice,
   quantity,
 }: {
+  id: string;
   image: string;
   name: string;
   href: string;
@@ -39,7 +41,10 @@ export default function CaseCard3({
       mobile: "",
       quantity,
     };
-    addToCart(cartItem);
+    addToCart({
+      ...cartItem,
+      id,
+    });
   };
   
 
@@ -61,16 +66,15 @@ export default function CaseCard3({
         {/* Product Image */}
         <div className="w-full flex justify-center">
           <div className="relative hover:scale-105 transition-transform duration-300
-            w-[90px] h-[90px] 
+            w-[95px] h-[90px] 
             sm:w-[110px] sm:h-[110px] 
             md:w-[160px] md:h-[200px] 
             xl:w-[200px] xl:h-[300px]">
-            <Image
+            <img
               src={image}
               alt={name}
-              fill
               sizes="(max-width: 640px) 100px, (max-width: 1024px) 140px, 180px"
-              className="object-contain"
+              className="object-contain w-full h-full"
             />
           </div>
         </div>

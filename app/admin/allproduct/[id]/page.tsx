@@ -10,6 +10,18 @@ import {
 } from "@/app/redux/services/case.service";
 
 export default function UpdateProductPage() {
+  const categorySlugs = [
+    "anime",
+    "marvel-dc",
+    "cars-bikes",
+    "couple",
+    "football",
+    "typography",
+    "gaming",
+    "islamic",
+    "ladies",
+    "k-pop",
+  ];
   const { id } = useParams();
   const router = useRouter();
   const [formData, setFormData] = useState<
@@ -25,9 +37,11 @@ export default function UpdateProductPage() {
   });
 
   // Fetch product data
-  const { data: productData, isLoading: isFetching, error: fetchError } = useFindOneCaseQuery(
-    id as string
-  );
+  const {
+    data: productData,
+    isLoading: isFetching,
+    error: fetchError,
+  } = useFindOneCaseQuery(id as string);
   const [updateCase, { isLoading: isUpdating }] = useUpdateCaseMutation();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -51,22 +65,25 @@ export default function UpdateProductPage() {
   // Handle fetch errors
   useEffect(() => {
     if (fetchError) {
-      if ('data' in fetchError) {
+      if ("data" in fetchError) {
         const errData = fetchError.data as { message?: string };
-        alert(errData.message || 'Failed to fetch product data');
+        alert(errData.message || "Failed to fetch product data");
       } else {
-        alert('Failed to fetch product data');
+        alert("Failed to fetch product data");
       }
     }
   }, [fetchError]);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
+  ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ 
-      ...prev, 
-      [name]: name === 'price' || name === 'stock' || name === 'discountPrice' 
-        ? Number(value) 
-        : value 
+    setFormData((prev) => ({
+      ...prev,
+      [name]:
+        name === "price" || name === "stock" || name === "discountPrice"
+          ? Number(value)
+          : value,
     }));
   };
 
@@ -96,15 +113,18 @@ export default function UpdateProductPage() {
 
     try {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const result = await updateCase({ body: formDataToSend, id: id as string }).unwrap();
+      const result = await updateCase({
+        body: formDataToSend,
+        id: id as string,
+      }).unwrap();
       alert("Product updated successfully");
       router.push("/admin/allproduct");
     } catch (err) {
-      if ('data' in (err as any)) {
+      if ("data" in (err as any)) {
         const errorData = (err as any).data as { message?: string };
-        alert(errorData.message || 'Failed to update product');
+        alert(errorData.message || "Failed to update product");
       } else {
-        alert('Failed to update product');
+        alert("Failed to update product");
       }
     }
   };
@@ -208,6 +228,7 @@ export default function UpdateProductPage() {
               <option value="2d-max">2d-max</option>
               <option value="soft">soft</option>
               <option value="3d-hard">3d-hard</option>
+              <option value="pop-holder">Pop Holder</option>
             </select>
           </div>
 
@@ -231,7 +252,7 @@ export default function UpdateProductPage() {
             />
           </div>
 
-          {/* Slug */}
+          {/* Slug Dropdown */}
           <div>
             <label
               htmlFor="slug"
@@ -239,15 +260,22 @@ export default function UpdateProductPage() {
             >
               Slug
             </label>
-            <input
-              type="text"
+            <select
               name="slug"
               id="slug"
               value={formData.slug}
               onChange={handleChange}
               required
-              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm"
-            />
+              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            >
+              <option value="">Select a category</option>
+              {categorySlugs.map((slug) => (
+                <option key={slug} value={slug}>
+                  {slug.charAt(0).toUpperCase() +
+                    slug.slice(1).replace("-", " ")}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Image Upload */}

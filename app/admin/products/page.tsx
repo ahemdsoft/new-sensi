@@ -17,6 +17,19 @@ export default function ProductsPage() {
     discountPrice: 0,
   });
 
+  const categorySlugs = [
+    "anime",
+    "marvel-dc",
+    "cars-bikes",
+    "couple",
+    "football",
+    "typography",
+    "gaming",
+    "islamic",
+    "ladies",
+    "k-pop",
+  ];
+
   const [createCase, { data, error, isLoading }] = useCreateCaseMutation();
   const [imagePreview, setImagePreview] = useState<string | null>(null);
 
@@ -155,6 +168,7 @@ export default function ProductsPage() {
               <option value="2d-max">2d-max</option>
               <option value="soft">soft</option>
               <option value="3d-hard">3d-hard</option>
+              <option value="pop-holder">Pop Holder</option>
               {/* Add more options as needed */}
             </select>
           </div>
@@ -178,23 +192,31 @@ export default function ProductsPage() {
             />
           </div>
 
-          {/* slug */}
+          {/* Slug Dropdown */}
           <div>
             <label
               htmlFor="slug"
               className="block text-sm font-medium text-gray-700"
             >
-              Slug
+              Category Slug
             </label>
-            <input
-              type="text"
+            <select
               name="slug"
               id="slug"
               value={formData.slug}
-              onChange={handleChange}
+              onChange={
+                handleChange as unknown as React.ChangeEventHandler<HTMLSelectElement>
+              }
               required
-              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm"
-            />
+              className="mt-1 block w-full rounded-md border-gray-300 p-2 shadow-sm focus:border-indigo-500 focus:ring-indigo-500"
+            >
+              <option value="">Select a category</option>
+              {categorySlugs.map((slug) => (
+                <option key={slug} value={slug}>
+                  {slug.replace(/-/g, " ").toUpperCase()}
+                </option>
+              ))}
+            </select>
           </div>
 
           {/* Image Upload */}
