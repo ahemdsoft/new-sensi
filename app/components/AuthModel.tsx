@@ -90,7 +90,7 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-blue-100">
+    <div className=" inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-blue-100">
       <div className="bg-white rounded-2xl p-10 w-full max-w-md shadow-xl border border-gray-200">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-3xl font-bold text-gray-800">

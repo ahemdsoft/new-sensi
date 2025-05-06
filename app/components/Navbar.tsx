@@ -6,7 +6,6 @@ import Image from 'next/image';
 import axios from 'axios';
 import { MagnifyingGlassIcon, ChevronDownIcon } from '@heroicons/react/24/outline';
 import CartOption from './cartOptions';
-import FadeIn from './animation/fadein';
 const navItems = [
   { name: 'HOME', href: '/' },
   { name: 'PHONE CASES', href: '/phone-cases' },
@@ -69,7 +68,7 @@ export default function Navbar() {
       </div>
 
       <nav className="bg-black text-white pt-8 pb-3 relative ">
-        <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+        <div className="max-w-7xl mx-auto px-4 flex  items-center justify-between h-16">
           <div className="flex items-center space-x-4">
             <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 md:hidden">
               <svg className="w-6 h-6" stroke="currentColor" fill="white" viewBox="0 0 24 24">

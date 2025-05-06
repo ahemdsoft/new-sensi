@@ -14,22 +14,22 @@ import SmoothSlider from './components/smoothslide';
 const caseCategories = [
   {
     name: '2D MAX CASE',
-    image: '/Component 6.png',
+    image: '/view1.jpg',
     href: '/phone-cases/2d-max',
   },
   {
     name: '2D CASE',
-    image: '/Component 7.png',
+    image: '/view2.jpg',
     href: '/phone-cases/2d',
   },
   {
     name: 'SOFT CASE',
-    image: '/Component 8.png',
+    image: '/view4.jpg',
     href: '/phone-cases/soft',
   },
   {
     name: '3D CASE',
-    image: '/Component 13.png',
+    image: '/view5.jpg',
     href: '/phone-cases/3d',
   },]
 
