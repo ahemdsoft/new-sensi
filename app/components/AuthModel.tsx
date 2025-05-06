@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useLoginMutation, useRegisterMutation } from "../redux/services/auth.service";
+import Link from "next/link";
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -166,6 +167,11 @@ export default function AuthModal({ isOpen, onClose, mode }: AuthModalProps) {
               className="mt-1 w-full rounded-md border-gray-300 focus:ring-blue-500 focus:border-blue-500 shadow-sm"
             />
           </div>
+          {authMode === "login" && (
+            <Link href="/forget-password">
+            <div className="text-right mb-5 text-blue-500">Forget Password</div>
+            </Link>
+          )}
 
           <button
             type="submit"

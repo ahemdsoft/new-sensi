@@ -1803,6 +1803,25 @@ __metadata:
   languageName: node
   linkType: hard
 
+"cookie@npm:^1.0.1":
+  version: 1.0.2
+  resolution: "cookie@npm:1.0.2"
+  checksum: 10c0/fd25fe79e8fbcfcaf6aa61cd081c55d144eeeba755206c058682257cb38c4bd6795c6620de3f064c740695bb65b7949ebb1db7a95e4636efb8357a335ad3f54b
+  languageName: node
+  linkType: hard
+
+"cookies-next@npm:^5.1.0":
+  version: 5.1.0
+  resolution: "cookies-next@npm:5.1.0"
+  dependencies:
+    cookie: "npm:^1.0.1"
+  peerDependencies:
+    next: ">=15.0.0"
+    react: ">= 16.8.0"
+  checksum: 10c0/0769e18dcaa2d9b4c51593014a8a7e360dbe809c54fdfc61310b8b53edd670ee6bdf01593067dcf81760827956cb17c07786efe22bb3d94b23e0dd388457fddb
+  languageName: node
+  linkType: hard
+
 "cors@npm:^2.8.5":
   version: 2.8.5
   resolution: "cors@npm:2.8.5"
@@ -4505,6 +4524,7 @@ __metadata:
     "@types/react-dom": "npm:^19"
     axios: "npm:^1.8.4"
     bcryptjs: "npm:^3.0.2"
+    cookies-next: "npm:^5.1.0"
     eslint: "npm:^9"
     eslint-config-next: "npm:15.3.0"
     framer-motion: "npm:^12.7.4"
