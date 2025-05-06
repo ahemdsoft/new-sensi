@@ -10,26 +10,15 @@ export default function CartOption() {
   const [cartOpen, setCartOpen] = useState(false);
   const { cartItems, removeFromCart, cartCount } = useCart();
 
-  // ✅ Updated total calculation using quantity
   const totalPrice = cartItems.reduce((total, item) => {
     return total + (item.price as number * (item.quantity || 1));
   }, 0);
 
   return (
     <>
-      <button onClick={() => setCartOpen(true)} className="p-2  hover:bg-gray-600 rounded-full transition-colors cursor-pointer relative">
-        <svg
-          className="w-6 h-6"
-          stroke="currentColor"
-          fill="none"
-          viewBox="0 0 24 24"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={2}
-            d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-          />
+      <button onClick={() => setCartOpen(true)} className="p-2 hover:bg-gray-600 rounded-full transition-colors cursor-pointer relative z-[9999]">
+        <svg className="w-6 h-6" stroke="currentColor" fill="none" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
         </svg>
         {cartCount > 0 && (
           <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">
@@ -39,29 +28,19 @@ export default function CartOption() {
       </button>
 
       <div
-        className={`fixed top-0 right-0 w-full md:w-1/4 h-full bg-white text-black shadow-xl transform transition-transform duration-300 z-[100] ${
+        className={`fixed top-0 right-0 w-full md:w-1/4 h-full bg-white text-black shadow-xl transform transition-transform duration-300 z-[9999] ${
           cartOpen ? "translate-x-0" : "translate-x-full"
         }`}
       >
-        <div className="p-4 h-full flex flex-col">
+        <div className="p-4 h-full flex flex-col z-[9999]">
           <div className="flex justify-between items-center mb-6">
             <h2 className="text-xl font-bold">Shopping Cart</h2>
             <button
               onClick={() => setCartOpen(false)}
               className="p-2 hover:bg-gray-100 rounded-full transition-colors"
             >
-              <svg
-                className="w-6 h-6"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
+              <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>

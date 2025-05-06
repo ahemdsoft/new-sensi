@@ -15,7 +15,7 @@ export default function CaseCard({
 }) {
   return (
     <FadeIn>
-      <div className="w-[306px] h-[463px] rounded-[10.5px] overflow-hidden border-2 border-gray-200 shadow-2xl bg-white flex flex-col group">
+      <div className="md:w-[306px] md:h-[463px] w-[280px] overflow-hidden border-2 rounded-2xl border-gray-200 shadow-2xl bg-white flex flex-col group">
         {/* Top white section */}
         <div className="bg-[#f7f7f7] p-4 flex flex-col items-center justify-start flex-grow">
           <h3 className="text-black font-bold text-center text-lg mb-4">
@@ -31,7 +31,7 @@ export default function CaseCard({
         </div>
 
         {/* Bottom color section */}
-        <div className="bg-[#D0ECFE] w-full py-4 flex justify-center">
+        <div className="bg-[#D0ECFE] w-full bottom-0 py-4 flex justify-center">
           <Link
             href={href}
             className="px-6 py-2 bg-[#3C1630] text-white rounded transition duration-300 shadow hover:shadow-[0_4px_20px_#BF00FFA3]"

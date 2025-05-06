@@ -31,36 +31,38 @@ export default function Moreservise() {
   };
 
   return (
-    <div ref={ref} className="w-full h-[100%] bg-white flex flex-col items-center gap-18 mt-12 justify-center">
-      <h1 className="text-4xl font-openSans text-center">More Services</h1>
-      <div className="w-[90%] h-[40%] flex flex-wrap justify-between gap-2">
-        {['shiping', 'premium', 'contact', 'check'].map((img, index) => (
-          <motion.div
-            className="flex flex-col justify-center gap-2 items-center"
-            initial="hidden"
-            animate={controls}
-            variants={imageVariants}
-            custom={index}
-            key={img}
-          >
-            <Image
-              src={`/${img}.png`}
-              width={70}
-              height={70}
-              alt={img}
-            />
-            <p>
-              {img === 'shiping'
-                ? 'Shipping All Over Bangladesh'
-                : img === 'premium'
-                ? 'Premium Quality'
-                : img === 'contact'
-                ? 'Contact Support'
-                : 'Secured Checkout'}
-            </p>
-          </motion.div>
-        ))}
-      </div>
-    </div>
+    <div ref={ref} className="w-full bg-white flex flex-col items-center mt-12 gap-8 justify-center">
+  <h1 className="text-4xl font-openSans text-center mb-6">More Services</h1>
+
+  <div className="w-[90%] grid grid-cols-2 sm:grid-cols-4 gap-y-8 gap-x-4">
+    {['shiping', 'premium', 'contact', 'check'].map((img, index) => (
+      <motion.div
+        className="flex flex-col justify-center items-center text-center gap-2"
+        initial="hidden"
+        animate={controls}
+        variants={imageVariants}
+        custom={index}
+        key={img}
+      >
+        <Image
+          src={`/${img}.png`}
+          width={35}
+          height={35}
+          alt={img}
+        />
+        <p className="text-sm font-medium">
+          {img === 'shiping'
+            ? 'Shipping All Over Bangladesh'
+            : img === 'premium'
+            ? 'Premium Quality'
+            : img === 'contact'
+            ? 'Contact Support'
+            : 'Secured Checkout'}
+        </p>
+      </motion.div>
+    ))}
+  </div>
+</div>
+
   );
 }

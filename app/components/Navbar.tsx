@@ -68,7 +68,7 @@ export default function Navbar() {
         <p>ALL MODELS AVAILABLE 🔥 🎉</p>
       </div>
 
-      <nav className="bg-black text-white pt-2 pb-3 relative z-20">
+      <nav className="bg-black text-white pt-8 pb-3 relative ">
         <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
           <div className="flex items-center space-x-4">
             <button onClick={() => setMenuOpen(!menuOpen)} className="p-2 md:hidden">
@@ -128,7 +128,7 @@ export default function Navbar() {
         </div>
       </nav>
 
-      <nav className="bg-black relative z-10">
+      <nav className="bg-black relative z-20">
         <div className="hidden md:flex justify-center font-sans font-extralight text-white text-base space-x-6 py-4">
           {navItems.map((item) => {
             if (item.name === 'PHONE CASES') {
@@ -138,7 +138,7 @@ export default function Navbar() {
                     {item.name}
                     <ChevronDownIcon className="w-4 h-4" />
                   </button>
-                  <div className="absolute bg-white text-black rounded shadow-lg mt-2 w-48 z-10 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-700">
+                  <div className="absolute z-10 bg-white text-black rounded shadow-lg mt-2 w-48  opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-700">
                     <ul>
                       {phoneCaseItems.map((subItem) => (
                         <li key={subItem.href}>
@@ -191,7 +191,7 @@ export default function Navbar() {
           <div key={item.href} className="w-full">
             <button 
               onClick={togglePhoneCases}
-              className="w-full py-2 border-b border-gray-700 flex z-20 m-1 justify-between cursor-pointer items-center"
+              className="w-full py-2 border-b border-gray-700 flex  m-1 justify-between cursor-pointer items-center"
             >
               {item.name}
               <ChevronDownIcon className={`w-4 h-4 transition-transform ${phoneCasesOpen ? 'rotate-180' : ''}`} />
@@ -226,7 +226,19 @@ export default function Navbar() {
       );
     })}<FadeIn delay={0.3}>
     <div className="absolute top-16 left-0 w-full bg-black text-white flex flex-col items-start px-6 py-4 space-y-2 md:hidden z-50">
-      {/* mobile menu content here */}
+      <div className="w-full mb-4">
+        <div className="flex items-center space-x-2">
+          <MagnifyingGlassIcon className="h-5 w-5 text-white" />
+          <input
+            type="text"
+            placeholder="Search products..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            onKeyDown={handleSearchKeyPress}
+            className="w-full bg-gray-700 text-white px-3 py-1 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
+          />
+        </div>
+      </div>
     </div>
   </FadeIn>
   </div>
