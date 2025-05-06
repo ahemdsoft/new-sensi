@@ -94,7 +94,7 @@ export default function Navbar() {
           </div>
 
           <Link href="/" className="flex-shrink-0">
-            <Image src="/logoo.png" alt="Logo" width={150} height={40} priority />
+            <Image src="/desgine/logoo.png" alt="Logo" width={150} height={40} priority />
           </Link>
 
           <div className="flex items-center space-x-3">
