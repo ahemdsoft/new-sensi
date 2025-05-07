@@ -3,11 +3,23 @@ import { useParams } from 'next/navigation';
 import CaseCardType2 from '@/app/components/cart2';
 import Link from 'next/link';
 import Image from 'next/image';
+import {useRouter} from 'next/navigation';
 
 export default function PhoneCaseTypePage() {
   const params = useParams();
   const id = params?.id; // this is your main category like "2d", "3d", etc.
   const headline = typeof id === "string" ? id.toUpperCase() : "";
+ const router= useRouter();
+
+  const handleGoToCustomization = () => {
+ // Ensure id is defined before proceeding
+   
+    if (typeof id == "string") {
+      localStorage.setItem('customizationId', id);} // store the ID
+    
+    router.push('/customization');
+  };
+
   const caseCategories = [
  
     {
@@ -100,7 +112,8 @@ export default function PhoneCaseTypePage() {
             href={'/customization'}
             className="px-6 py-2 bg-[#3C1630] text-white rounded transition duration-300 shadow hover:shadow-[0_4px_20px_#BF00FFA3]"
           >
-            CUSTOMIZATION
+            <button onClick={handleGoToCustomization}>CUSTOMIZATION</button>
+
           </Link>
         </div>
       </div>

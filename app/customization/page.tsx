@@ -14,6 +14,9 @@ import { useCart } from "@/app/context/CartContext";
 import Image from "next/image";
 import FadeIn from "../components/animation/fadein";
 import { useFindAllDeviceQuery } from "../redux/services/device.service";
+import { useParams } from "next/navigation";
+
+
 
 type OptionType = {
   label: string;
@@ -64,6 +67,7 @@ type CartItem = {
   file: File;
 };
 
+
 export default function Customization() {
   const [selectedBrand, setSelectedBrand] = useState("");
   const [selectedModel, setSelectedModel] = useState("");
@@ -76,6 +80,9 @@ export default function Customization() {
   const [price, setPrice] = useState(0);
   const [models, setModels] = useState<string[]>([]);
 
+  const params = useParams();
+  const { id } = params as { id: string };
+  console.log("Selected type:", id);
   const { data } = useFindAllDeviceQuery({
     forCase: selectedType,
     brand: selectedBrand,
@@ -136,6 +143,8 @@ export default function Customization() {
     } finally {
       setLoading(false);
     }
+    localStorage.removeItem("customizationId");
+
   };
 
   const handleBuyNow = async () => {
@@ -151,8 +160,17 @@ export default function Customization() {
     } finally {
       setLoading(false);
     }
-  };
+    localStorage.removeItem("customizationId");
 
+  };
+  useEffect(() => {
+    const yaeah = localStorage.getItem("customizationId");
+    if (yaeah && !selectedType) {
+      setSelectedType(yaeah);
+      setPrice(PRICE_MAP[yaeah] || 0);
+    }
+  }, [selectedType]);
+  
   return (
     <FadeIn delay={0.1}>
       <div className="w-full py-10 px-4 flex flex-col items-center bg-gray-50">
@@ -197,34 +215,44 @@ export default function Customization() {
             <div className="space-y-4">
               <div>
                 <h3 className="font-medium mb-2">Select Brand</h3>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-4 gap-2 cursor-pointer">
                   {BRAND_OPTIONS.map((brand) => (
-                    <Button
-                      key={brand.value}
-                      onClick={() => {
-                        setSelectedBrand(brand.value);
-                        setSelectedModel("");
-                      }}
-                      variant={selectedBrand === brand.value ? "default" : "outline"}
-                      className="truncate"
-                    >
-                      {brand.label}
-                    </Button>
+              <Button
+              key={brand.value}
+              onClick={() => {
+                setSelectedBrand(brand.value);
+                setSelectedModel("");
+              }}
+              variant={selectedBrand === brand.value ? "default" : "outline"}
+              className={
+                selectedBrand === brand.value
+                  ? "bg-blue-600 text-white"
+                  : "bg-white text-gray-800 border"
+
+              }
+            >
+              {brand.label}
+            </Button>
+            
                   ))}
                 </div>
               </div>
 
               <div>
                 <h3 className="font-medium mb-2">Case Type</h3>
-                <div className="grid grid-cols-4 gap-2">
+                <div className="grid grid-cols-4 gap-2 ">
                   {CASE_OPTIONS.map((type) => (
                     <Button
                       key={type.value}
                       onClick={() => {
                         setSelectedType(type.value);
                         setPrice(PRICE_MAP[type.value]);
+                       
+
+                    
                       }}
                       variant={selectedType === type.value ? "default" : "outline"}
+                      className={selectedType === type.value ? "bg-[#04872a] text-white" : "bg-white text-gray-800 border"}
                     >
                       {type.label}
                     </Button>
@@ -251,8 +279,8 @@ export default function Customization() {
               )}
 
               <div className="border-gray-300 border-2 p-2 rounded-lg">
-                <span className="text-[#11802e] font-medium">Price: </span>
-                <span>{price}</span>
+                <span className="text-[#11802e] font-extrabold">Price: </span>
+                <span className="font-extrabold">{price}</span>
               </div>
 
               <div>

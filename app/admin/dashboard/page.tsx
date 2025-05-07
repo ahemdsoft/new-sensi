@@ -2,12 +2,22 @@
 
 import { useState } from 'react';
 import { ShoppingBag, Clock, Package, DollarSign, Plus, Eye } from 'lucide-react';
+import { useGetAllForAdminQuery } from '@/app/redux/services/order.service';
+import {
+  useFindAllCaseQuery,
+} from "@/app/redux/services/case.service";
+
+import Link from 'next/link';
 
 export default function DashboardPage() {
+
+  const { data: orders = [], } = useGetAllForAdminQuery({});
+  const { data: products = [] } = useFindAllCaseQuery({});
+
   const [stats] = useState({
-    totalOrders: 150,
-    pendingOrders: 25,
-    totalProducts: 45,
+    totalOrders: orders.length,
+    pendingOrders: orders.length,
+    totalProducts: products.length,
     totalRevenue: 25000
   });
 
@@ -58,10 +68,10 @@ export default function DashboardPage() {
           <h2 className="text-xl font-semibold text-gray-800 mb-4 text-center">Quick Actions</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <button className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-lg text-white bg-indigo-600 hover:bg-indigo-700 transition-all">
-              <Plus className="w-5 h-5" /> Add New Product
+             <Plus className="w-5 h-5" /> <Link href={'/admin/products'}>Add New Product</Link> 
             </button>
             <button className="flex items-center justify-center gap-2 px-4 py-3 text-sm font-semibold rounded-lg text-white bg-green-600 hover:bg-green-700 transition-all">
-              <Eye className="w-5 h-5" /> View Orders
+              <Eye className="w-5 h-5" /><Link href={'/admin/orders'}> View Orders</Link>
             </button>
           </div>
         </div>

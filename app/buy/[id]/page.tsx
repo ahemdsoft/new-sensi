@@ -103,28 +103,28 @@ export default function BuyNowPage() {
 
   return (
     <Fullslide delay={0.1}>
-      <div className="min-h-screen bg-gradient-to-br from-white via-purple-50 to-pink-100 flex flex-col items-center py-12 px-4">
-        <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
+      <div className="min-h-screen bg-white flex flex-col items-center py-12 px-4">
+        <div className="w-full max-w-6xl bg-white  rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
           {/* Product Image */}
-          <div className="relative  aspect-square rounded-xl overflow-hidden border">
+          <div className="relative  aspect-square rounded-xl overflow-hidden">
             <img
               src={product.image}
               alt={product.name}
-              className="object-cover w-full h-full hover:scale-105 transition-transform duration-300"
+              className="object-contain w-full h-full hover:scale-105 transition-transform duration-300"
             />
           </div>
 
           {/* Product Info */}
           <div className="flex flex-col justify-between space-y-6">
             <div>
-              <h1 className="text-4xl font-extrabold text-gray-800">
+              <h1 className="text-4xl font-bold text-black">
                 {product.name}
               </h1>
               <div className="mt-3 space-y-1">
-                <p className="text-xl line-through text-gray-400">
+                <p className="text-xl line-through text-gray-500">
                   {product.price}৳
                 </p>
-                <p className="text-3xl font-bold text-pink-600">
+                <p className="text-2xl font-bold text-pink-600">
                   {product.discountPrice}৳
                 </p>
                 <p className="text-sm font-medium text-green-600">
@@ -222,7 +222,7 @@ export default function BuyNowPage() {
               Buy Now
             </button>
 
-            <div className="flex items-center gap-2 mt-4 text-sm text-gray-600">
+            <div className="flex items-end-safe gap-2 mt-4  text-sm text-gray-600">
               <Image src="/call.png" alt="Call" width={20} height={20} />
               <span>Need Help? Call Now!</span>
             </div>

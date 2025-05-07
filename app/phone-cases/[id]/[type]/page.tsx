@@ -3,6 +3,7 @@ import { useParams} from "next/navigation";
 import CaseCard3 from "@/app/components/cart3";
 import { TCartItem } from "@/app/types/case.interface";
 import { useFindAllCaseQuery } from "@/app/redux/services/case.service";
+import Link from "next/link";
 
 export default function PhoneCasesPage() {
   const params = useParams();
@@ -34,13 +35,16 @@ export default function PhoneCasesPage() {
   return (
     <div className="p-4 flex flex-col items-center justify-start min-h-screen m-0 bg-[#ffffff]">
       <div className="w-[90%] flex flex-col gap-11 justify-center items-center mb-5 mt-5">
-       <h1 className="text-xl sm:text-3xl md:text-6xl hover:shadow-[0px_4px_6px_#BF00FF78] font-bold w-full max-w-[848px] rounded-[15px] bg-[#3C1630] text-white flex justify-center items-center px-4 py-2 text-center">
+       <h1 className="text-xl sm:text-3xl md:text-6xl hover:shadow-[0px_4px_6px_#BF00FF78] font-bold w-full max-w-[848px] rounded-[15px] bg-[#3C1630] text-white flex justify-center items-center px-4 py-3 text-center">
   {headline} {secondHeadline} CASES
-</h1>
+</h1><div className="flex flex-wrap md:gap-4 gap-2 justify-center w-full flex-row">
 
-<h2 className="text-sm sm:text-xl md:text-4xl hover:shadow-[0px_4px_6px_#00D6EE40] text-white font-semibold w-full max-w-[1143px] bg-[#3C1630] flex justify-center items-center px-4 py-2 rounded-[15.75px] text-center">
-  96% COLOUR ACCURACY, GRAPHENE METAL, RUBBER GRIP
+<h2 className="text-sm sm:text-xl md:text-4xl hover:shadow-[0px_4px_6px_#00D6EE40] text-white font-semibold w-full max-w-[470px] bg-[#3C1630] flex justify-center items-center px-4 py-2 rounded-[15.75px] text-center">
+ {secondHeadline} DESGINE
 </h2>
+<h2 className="text-sm sm:text-xl md:text-4xl hover:shadow-[0px_4px_6px_#00D6EE40] text-white font-semibold w-full max-w-[360px] bg-[#3C1630] flex justify-center items-center px-4 py-2 rounded-[15.75px] text-center">
+  <Link href={'/desgine-collection'} >OTHER CASES</Link>
+</h2></div>
 
 
 <div className="flex flex-wrap md:gap-4 gap-2 justify-center ">
