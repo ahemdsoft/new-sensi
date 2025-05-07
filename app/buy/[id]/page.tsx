@@ -106,7 +106,7 @@ export default function BuyNowPage() {
       <div className="min-h-screen bg-gradient-to-br from-white via-purple-50 to-pink-100 flex flex-col items-center py-12 px-4">
         <div className="w-full max-w-6xl bg-white shadow-xl rounded-3xl overflow-hidden grid grid-cols-1 md:grid-cols-2 gap-8 p-8">
           {/* Product Image */}
-          <div className="relative w-full aspect-square rounded-xl overflow-hidden border">
+          <div className="relative  aspect-square rounded-xl overflow-hidden border">
             <img
               src={product.image}
               alt={product.name}

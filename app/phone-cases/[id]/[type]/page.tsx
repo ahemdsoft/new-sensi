@@ -32,7 +32,7 @@ export default function PhoneCasesPage() {
 
 
   return (
-    <div className="p-4 flex flex-col items-center justify-start min-h-screen bg-[#ffffff]">
+    <div className="p-4 flex flex-col items-center justify-start min-h-screen m-0 bg-[#ffffff]">
       <div className="w-[90%] flex flex-col gap-11 justify-center items-center mb-5 mt-5">
        <h1 className="text-xl sm:text-3xl md:text-6xl hover:shadow-[0px_4px_6px_#BF00FF78] font-bold w-full max-w-[848px] rounded-[15px] bg-[#3C1630] text-white flex justify-center items-center px-4 py-2 text-center">
   {headline} {secondHeadline} CASES
@@ -43,7 +43,7 @@ export default function PhoneCasesPage() {
 </h2>
 
 
-<div className="flex flex-wrap gap-4 justify-center ">
+<div className="flex flex-wrap md:gap-4 gap-2 justify-center ">
           {isLoading ? (
             <div className="text-xl font-medium text-gray-600">Loading products...</div>
           ) : caseCategories.length === 0 ? (

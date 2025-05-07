@@ -84,7 +84,7 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="bg-white/95 backdrop-blur rounded-xl shadow-2xl">
+        <div className="bg-white/95 backdrop-blur rounded-xl mt-3 shadow-2xl">
           <Link
             href="/customization"
             className="bg-[#3C1630] text-white text-lg md:text-xl h-[106px] w-full rounded-xl flex items-center justify-center font-semibold hover:bg-[#4D1C3D] transition-all duration-300 transform hover:scale-105 hover:shadow-xl"

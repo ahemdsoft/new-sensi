@@ -23,9 +23,10 @@ interface DeliveryOption {
 }
 
 const Deliverycharge: DeliveryOption[] = [
-  { charge: 70, name: "Dhaka City" },
-  { charge: 130, name: "Outside Dhaka City" },
-  { charge: 100, name: "Near Dhaka" },
+  { charge: 60, name: "Inside Dhaka" },
+  { charge: 120, name: "Outside Dhaka" },
+  {charge:100, name:"Nearby Dhaka(Tongi,Keraniganj,Dohar,Nababganj)"}
+ 
 ];
 
 function formatPhoneNumber(phone: string): string {

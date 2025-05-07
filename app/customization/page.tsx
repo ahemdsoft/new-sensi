@@ -28,10 +28,10 @@ const CASE_OPTIONS: OptionType[] = [
 ];
 
 const PRICE_MAP: Record<string, number> = {
-  "2d": 400,
-  "2d-max": 500,
-  "3d-hard": 600,
-  "soft": 700,
+  "2d": 360,
+  "2d-max": 440,
+  "3d-hard": 260,
+  "soft": 280,
 };
 
 const BRAND_OPTIONS: OptionType[] = [
@@ -252,15 +252,16 @@ export default function Customization() {
 
               <div className="border-gray-300 border-2 p-2 rounded-lg">
                 <span className="text-[#11802e] font-medium">Price: </span>
-                <span>₹{price}</span>
+                <span>{price}</span>
               </div>
 
               <div>
-                <h3 className="font-medium mb-2">Upload Design</h3>
+                <h3 className="font-medium mb-2">Upload Your Design</h3>
                 <Input
                   type="file"
                   onChange={handleImageUpload}
                   accept="image/*"
+                  
                 />
               </div>
 
