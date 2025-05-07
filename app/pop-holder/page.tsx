@@ -24,12 +24,7 @@ export default function PhoneCasesPage() {
     return <div>Error occurred</div>;
   }
 
-  if (isLoading) {
-    return <div className="h-[100%] absolute flex justify-center items-center">Loading...</div>;
-  }
-  if (!data) {
-    return <div className="h-[100%] absolute flex justify-center items-center">No data found</div>;
-  }
+
 
   const caseCategories: TCartItem[] = data ? (data as TCartItem[]) : [];
 
@@ -58,7 +53,12 @@ export default function PhoneCasesPage() {
         </h2>
 
         <div className="flex flex-wrap justify-center gap-24">
-          {caseCategories.map((item, index) => {
+        {isLoading ? (
+            <div className="text-xl font-medium text-gray-600">Loading products...</div>
+          ) : caseCategories.length === 0 ? (
+            <div>No data found</div>
+          ) : (
+          caseCategories.map((item, index) => {
             const href = `/buy/${item.id}`;
             console.log(item)
             return (
@@ -84,7 +84,7 @@ export default function PhoneCasesPage() {
                 ) : null}
               </div>
             );
-          })}
+          }))}
         </div>
       </div>
     </div>

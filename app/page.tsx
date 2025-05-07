@@ -157,7 +157,7 @@ export default function Home() {
           
           <div className='w-[85%] ml-3.5 h-[60%] flex flex-col gap-10 bg-gray-50'>
             <div className='text- text-2xl font-Montaga underline-offset-4 underline '><FadeInOnScroll>Latest <span className='text-[#008ECC]'>Product</span></FadeInOnScroll></div>
-          <div className='w-full h-[100%] flex justify-center items-center'>
+          <div className='w-full h-[70%] flex justify-center items-center'>
           <ProductSlider/>
           </div>
           </div>

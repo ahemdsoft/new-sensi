@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 
 const products = [
-  { id: 1, name: 'Anime Case', category: '2D CASE', image: '/image/bgh1.png' },
-  { id: 2, name: 'Marvel Case', category: 'Soft Case', image: '/image/bgh2.png' },
-  { id: 3, name: 'Islamic Case', category: '3D Max Case', image: '/Component 8.png' },
-  { id: 4, name: 'k-pop case', category: '2D MAX CASE', image: '/Component 8.png' },
+  { id: 1, name: 'MARVEL-DC DESGINE', slug:"marvel-dc", category: '2D CASE', image: '/slider/1.svg' },
+  { id: 2, name: 'CARS & BIKES DESGINE',slug:"cars-bikes"  ,category: 'Soft Case', image: '/slider/2.svg' },
+  { id: 3, name: 'GAMING DESGINE',slug:"gaming",  category: '3D Max Case', image: '/slider/3.svg' },
+  { id: 4, name: 'k-POP DESGINE',slug:"k-pop",  category: '2D MAX CASE', image: '/slider/4.svg' },
 ];
 
 export default function Page() {
@@ -27,7 +27,7 @@ export default function Page() {
   const prevProduct = prevIndex !== null ? products[prevIndex] : null;
 
   return (
-    <div className="relative h-[70vh] w-full overflow-hidden flex items-center justify-center bg-black">
+    <div className="relative h-[100vh] w-full overflow-hidden flex items-center  justify-center bg-black">
       {/* Previous image fades out slowly */}
       <AnimatePresence>
         {prevProduct && (
@@ -52,11 +52,11 @@ export default function Page() {
         initial={{ x: '100%' }}
         animate={{ x: 0 }}
         transition={{ duration: 1.2, ease: 'easeInOut' }}
-        className="absolute top-0 left-0 w-full h-full object-cover z-20"
+        className="absolute top-0 left-0 w-full h-full object-contain z-20"
       />
 
       {/* Text Section */}
-      <div className="absolute bottom-10 text-center text-white z-30">
+      <div className="absolute bottom-10 text-center text-white rounded-4xl text-4xl font-extrabold h-[10%] flex justify-center items-center w-[25%] bg-gray-900 opacity-40 z-30">
         <motion.div
           key={`text-${currentProduct.id}`}
           initial={{ opacity: 0, y: 20 }}
@@ -64,7 +64,7 @@ export default function Page() {
           exit={{ opacity: 0, y: -20 }}
           transition={{ duration: 1.2, ease: 'easeInOut' }}
         >
-          <Link href={`/buy/${currentProduct.id}`}>
+          <Link href={`/desgine-collection/${currentProduct.slug}`}>
             <h2 className="text-3xl font-bold">{currentProduct.name}</h2>
             <p className="text-gray-300 text-lg">{currentProduct.category}</p>
           </Link>
