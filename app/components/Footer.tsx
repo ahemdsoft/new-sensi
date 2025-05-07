@@ -40,7 +40,7 @@ const Footer = () => {
           <div className="space-y-6">
             <Link href="/" className="block">
               <Image
-                src="/logoo.png"
+                src="/desgine/logoo.png"
                 alt="Senshi Phone Casings"
                 width={150}
                 height={50}
@@ -125,7 +125,7 @@ const Footer = () => {
           </p>
           <Link href="/" className="mt-4 md:mt-0">
             <Image
-              src="/logoo.png"
+              src="/desgine/logoo.png"
               alt="Senshi Phone Casings"
               width={100}
               height={40}
